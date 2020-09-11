@@ -1,0 +1,2 @@
+class UnapprovedArticle < ApplicationRecord
+end

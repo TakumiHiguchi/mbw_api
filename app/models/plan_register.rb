@@ -1,0 +1,2 @@
+class PlanRegister < ApplicationRecord
+end
