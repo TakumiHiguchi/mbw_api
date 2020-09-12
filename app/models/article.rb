@@ -37,7 +37,7 @@ class Article < ApplicationRecord
         end
     end
     def decode64_tempfile(f)
-        file = Tempfile.new()
+        file = Tempfile.new('')
         file.binmode
         file << f
         file.rewind
