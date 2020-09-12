@@ -8,6 +8,7 @@ class Article < ApplicationRecord
         if uri.scheme == "data" then
             data = decode(uri)
             extension = extension(uri)
+            p extension
             file = decode64_tempfile(data,"test"+extension)
             self.update(thumbnail:file)
         end
