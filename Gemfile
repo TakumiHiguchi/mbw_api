@@ -49,3 +49,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 #CORS
 gem 'rack-cors'
+
+# for image uploader with AWS S3
+gem 'carrierwave'
+gem 'fog'
