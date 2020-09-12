@@ -5,7 +5,7 @@ class CreateArticles < ActiveRecord::Migration[6.0]
       t.text :content
       t.string :key
       t.text :description
-      t.string :thumbnail, default: ""
+      t.string :thumbnail
       t.integer :release_time, default: 0
       t.boolean :isindex, default: true
 
