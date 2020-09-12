@@ -6,12 +6,12 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
     
     if auth.isAdmin?(email:params[:email],session:params[:session]) then
       now = Time.now.to_i
-      ins = PlanRegister.where(maxAge: now..Float::INFINITY)
+      ins = PlanRegister.where(maxage: now..Float::INFINITY)
       result = ins.map do |data|
         next({
             name:data.name,
             email:data.email,
-            maxAge:data.maxage,
+            maxage:data.maxage,
             url:Root + "/signup?k="+data.key+"&s="+data.session
         })
       end
@@ -54,7 +54,7 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
       result = PlanRegister.create(
           email:params[:userEmail],
           key:inf[:key],
-          maxAge:inf[:maxAge],
+          maxage:inf[:maxAge],
           session:inf[:session],
           name:params[:name]
       )
