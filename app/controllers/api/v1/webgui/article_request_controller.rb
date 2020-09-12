@@ -57,7 +57,7 @@ class Api::V1::Webgui::ArticleRequestController < ApplicationController
         if auth.isAdmin?(email:params[:email],session:params[:session]) then
             o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
             key =(0...20).map { o[rand(o.length)] }.join
-            result = ArticleRequest.create(title:params[:title],requestType:params[:type],count:params[:count],key:key)
+            result = ArticleRequest.create(title:params[:title],request_type:params[:type],count:params[:count],key:key)
             if result
                 render json: JSON.pretty_generate({
                     status:'SUCCESS',
