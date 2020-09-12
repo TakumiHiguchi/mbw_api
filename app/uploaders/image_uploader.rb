@@ -1,15 +1,14 @@
 class ImageUploader < CarrierWave::Uploader::Base
   
-   storage :fog
+   if Rails.env.production? || Rails.env.staging?
+     storage :fog
+   else
+     storage :file
+   end
   
    # S3のディレクトリ名
    def store_dir
      "uploads/#{model.class.to_s.underscore}/#{mounted_as}"
-   end
-  
-   # 許可する画像の拡張子
-   def extension_whitelist
-      %w(jpg jpeg png)
    end
   
    # 保存するファイルの命名規則
