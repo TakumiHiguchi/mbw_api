@@ -8,8 +8,10 @@ class Article < ApplicationRecord
         if uri.scheme == "data" then
             data = decode(uri)
             extension = extension(uri)
-            file = decode64_tempfile(data,"test"+extension)
-            p file
+            file = decode64_tempfile(data)
+            
+            #名前を置き換える
+            File.rename(file,"test"+extension)
             self.update(thumbnail:file)
 
             file.close
@@ -34,8 +36,8 @@ class Article < ApplicationRecord
           raise "Unsupport Content-Type"
         end
     end
-    def decode64_tempfile(f, filename)
-        file = Tempfile.new(filename)
+    def decode64_tempfile(f)
+        file = Tempfile.new()
         file.binmode
         file << f
         file.rewind
