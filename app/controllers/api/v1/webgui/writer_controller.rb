@@ -53,7 +53,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
             draft = ins.where(status:1).map do |data|
                 next(
                 [['title',data.title],
-                ['type',data.requestType],
+                ['type',data.request_type],
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
@@ -63,7 +63,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
             unaccepted = ins.where(status:2).map do |data|
                 next(
                 [['title',data.title],
-                ['type',data.requestType],
+                ['type',data.request_type],
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
@@ -73,7 +73,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
             resubmit = ins.where(status:3).map do |data|
                 next(
                 [['title',data.title],
-                ['type',data.requestType],
+                ['type',data.request_type],
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
@@ -83,7 +83,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
             complete = ins.where(status:4).map do |data|
                 next(
                 [['title',data.title],
-                ['type',data.requestType],
+                ['type',data.request_type],
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],

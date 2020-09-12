@@ -107,7 +107,7 @@ class Api::V1::Webgui::ArticleRequestController < ApplicationController
                 now = Time.now.to_i
                 aR.update(
                     status:3,
-                    maxAge:now+86400
+                    maxage:now+86400
                 )
                 render json: JSON.pretty_generate({
                     status:'SUCCESS',
