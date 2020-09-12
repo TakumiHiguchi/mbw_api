@@ -52,9 +52,9 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 content:params[:content],
                 key:params[:key],
                 description:params[:description],
-                thumbnail:params[:thumbnail],
                 release_time:params[:releaseTime],
             )
+            article.image_from_base64(params[:thumbnail])
             #タグを作る
             Tag.createTag(article.id,params[:tags])
         
