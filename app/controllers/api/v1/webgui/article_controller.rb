@@ -2,6 +2,13 @@ class Api::V1::Webgui::ArticleController < ApplicationController
     def index
         article = Article.all
         result = article.map do |data|
+            s3 = Aws::S3::Resource.new(
+                region: ENV['S3_REGION'],
+                credentials: Aws::Credentials.new(
+                    ENV['S3_ACCESS_KEY'],
+                    ENV['S3_SECRET_KEY']
+                )
+            )
             presigned_url = nil
             if data.thumbnail.to_s
                 signer = Aws::S3::Presigner.new(client: s3.client)
@@ -13,7 +20,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 content:data.content,
                 key:data.key,
                 description:data.description,
-                thumbnail:data.thumbnail,
+                thumbnail:presigned_url,
                 releaseTime:data.release_time
             })
         end
