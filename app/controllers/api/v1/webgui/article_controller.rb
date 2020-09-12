@@ -57,14 +57,16 @@ class Api::V1::Webgui::ArticleController < ApplicationController
         p params[:thumbnail]
         if auth.isAdmin?(email:params[:email],session:params[:session]) then
             user = Writer.joins(:article_requests).select('writers.*,article_requests.key').find_by('article_requests.key = ?',params[:key])
+            thumImage = Article.image_from_base64(params[:thumbnail])
             article = Article.create(
                 title:params[:title],
                 content:params[:content],
                 key:params[:key],
+                thumbnail:thumImage,
                 description:params[:description],
                 release_time:params[:releaseTime],
             )
-            article.image_from_base64(params[:thumbnail])
+            
             #タグを作る
             Tag.createTag(article.id,params[:tags])
         

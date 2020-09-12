@@ -9,7 +9,6 @@ class Article < ApplicationRecord
         file.binmode
         file << bin
         file.rewind
-        p file
-        self.update(thumbnail:file)
+        return fire
     end
 end
