@@ -17,6 +17,22 @@ class Api::V1::Webgui::ArticleController < ApplicationController
             result:result
         })
     end
+    def show
+        data = Article.find_by(key:params[:id])
+        result = {
+            title:data.title,
+            content:data.content,
+            key:data.key,
+            description:data.description,
+            thumbnail:data.thumbnail,
+            releaseTime:data.release_time
+        }
+        render json: JSON.pretty_generate({
+            status:'SUCCESS',
+            api_version: 'v1',
+            result:result
+        })
+    end
     def create
         auth = Authentication.new()
         errorJson = RenderJson.new()

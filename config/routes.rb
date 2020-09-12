@@ -17,7 +17,7 @@ Rails.application.routes.draw do
         resources :plan_register, only: [:index,:show,:create] 
         resources :article_request, only: [:index,:show,:create,:edit] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
-        resources :article, only: [:index,:create,:edit,:update]
+        resources :article, only: [:index,:show,:create,:edit,:update]
       end
     end
   end

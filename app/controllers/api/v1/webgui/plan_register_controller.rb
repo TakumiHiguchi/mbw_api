@@ -11,7 +11,7 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
         next({
             name:data.name,
             email:data.email,
-            maxage:data.maxage,
+            maxAge:data.maxage,
             url:Root + "/signup?k="+data.key+"&s="+data.session
         })
       end
