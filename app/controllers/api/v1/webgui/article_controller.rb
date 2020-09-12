@@ -18,7 +18,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
         })
     end
     def show
-        data = Article.joins(:tags).select('articles.*,tags.*,tag.key AS tag_key').where('articles.key = ?',params[:id])
+        data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key').where('articles.key = ?',params[:id])
         tags = data.map do |d|
             next({
                 key:d.tag_key,
