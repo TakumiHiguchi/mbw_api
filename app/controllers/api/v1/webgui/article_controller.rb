@@ -44,7 +44,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
     def create
         auth = Authentication.new()
         errorJson = RenderJson.new()
-        
+        p params[:thumbnail]
         if auth.isAdmin?(email:params[:email],session:params[:session]) then
             user = Writer.joins(:article_requests).select('writers.*,article_requests.key').find_by('article_requests.key = ?',params[:key])
             article = Article.create(
