@@ -11,7 +11,7 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
         next({
             name:data.name,
             email:data.email,
-            maxAge:data.maxAge,
+            maxAge:data.maxage,
             url:Root + "/signup?k="+data.key+"&s="+data.session
         })
       end
@@ -30,7 +30,7 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
     user = PlanRegister.find_by(key:params[:id],session:params[:session])
     if user
       now = Time.now.to_i
-      if user.maxAge > now
+      if user.maxage > now
         ins = [name:user.name,email:user.email]
         
         render json: JSON.pretty_generate({

@@ -8,11 +8,11 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
             res = ins.map do |data|
                 next({
                     title:data.title,
-                    type:data.requestType,
+                    type:data.request_type,
                     count:data.count,
                     status:data.status,
                     key:data.key,
-                    maxAge:data.maxAge
+                    maxAge:data.maxage
                 })
             end
             render json: JSON.pretty_generate({
@@ -60,7 +60,7 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
         errorJson = RenderJson.new()
         result = auth.isWriter?(email:params[:email],session:params[:session])
         if result[:isWriter]
-            ins = Writer.joins(article_requests: :unapproved_articles).select("writers.id, article_requests.id, article_requests.maxAge, article_requests.count,unapproved_articles.*").where("writers.id = ?", result[:writer].id).find_by("article_requests.key = ?", params[:id])
+            ins = Writer.joins(article_requests: :unapproved_articles).select("writers.id, article_requests.id,article_requests.maxage, article_requests.count,unapproved_articles.*").where("writers.id = ?", result[:writer].id).find_by("article_requests.key = ?", params[:id])
             if ins
                 result ={
                     title:ins.title,
@@ -68,7 +68,7 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
                     count:ins.count,
                     description:ins.description,
                     key:ins.key,
-                    maxAge:ins.maxAge
+                    maxAge:ins.maxage
                 }
                 render json: JSON.pretty_generate({
                     status:'SUCCESS',
@@ -88,7 +88,7 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
         errorJson = RenderJson.new()
         result = auth.isWriter?(email:params[:email],session:params[:session])
         if result[:isWriter]
-            ins = Writer.joins(article_requests: :unapproved_articles).select("writers.id, article_requests.id, article_requests.maxAge, article_requests.count,unapproved_articles.*").where("writers.id = ?", result[:writer].id).find_by("article_requests.key = ?", params[:id])
+            ins = Writer.joins(article_requests: :unapproved_articles).select("writers.id, article_requests.id, article_requests.maxage, article_requests.count,unapproved_articles.*").where("writers.id = ?", result[:writer].id).find_by("article_requests.key = ?", params[:id])
             if ins
                 #ユーザーのデータか確認
                 aR = ArticleRequest.find_by(key: params[:id])

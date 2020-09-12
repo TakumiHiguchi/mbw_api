@@ -4,7 +4,7 @@ class CreateWriters < ActiveRecord::Migration[6.0]
       t.string :email
       t.string :password
       t.string :session
-      t.integer :maxAge
+      t.integer :maxage
 
       t.timestamps
     end

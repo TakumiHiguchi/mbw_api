@@ -8,7 +8,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 key:data.key,
                 description:data.description,
                 thumbnail:data.thumbnail,
-                releaseTime:data.releaseTime
+                releaseTime:data.release_time
             })
         end
         render json: JSON.pretty_generate({

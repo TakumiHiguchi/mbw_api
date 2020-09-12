@@ -2,7 +2,7 @@ class Authentication
   def isWriter?(props)
     user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
-    if user && user.maxAge > now
+    if user && user.maxage > now
       return({
         isWriter:true,
         writer:user
@@ -19,7 +19,7 @@ class Authentication
     #sessionの確認
     user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
-    if props[:email] == "uiljpfs4fg5hsxzrnhknpdqfx@gmail.com" && !user.nil? && user.maxAge > now
+    if props[:email] == "uiljpfs4fg5hsxzrnhknpdqfx@gmail.com" && !user.nil? && user.maxage > now
       return true
     else
       return false

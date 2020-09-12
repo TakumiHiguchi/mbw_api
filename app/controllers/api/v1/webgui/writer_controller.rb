@@ -20,7 +20,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
         ins = PlanRegister.find_by(key:params[:key],session:params[:session],email:params[:email])
         if ins
             now = Time.now.to_i
-            if ins.maxAge < now
+            if ins.maxage < now
                 render json: errorJson.createError(code:'AE_0003',api_version:'v1')
             elsif !params[:phrase].match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
                 render json: errorJson.createError(code:'AE_0005',api_version:'v1')
@@ -57,7 +57,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
-                ['maxAge',data.maxAge]].to_h
+                ['maxAge',data.maxage]].to_h
                 )
             end
             unaccepted = ins.where(status:2).map do |data|
@@ -67,7 +67,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
-                ['maxAge',data.maxAge]].to_h
+                ['maxAge',data.maxage]].to_h
                 )
             end
             resubmit = ins.where(status:3).map do |data|
@@ -77,7 +77,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
-                ['maxAge',data.maxAge]].to_h
+                ['maxAge',data.maxage]].to_h
                 )
             end
             complete = ins.where(status:4).map do |data|
@@ -87,7 +87,7 @@ class Api::V1::Webgui::WriterController < ApplicationController
                 ['count',data.count],
                 ['status',data.status],
                 ['key',data.key],
-                ['maxAge',data.maxAge]].to_h
+                ['maxAge',data.maxage]].to_h
                 )
             end
             payment = Payment.find_by(writer_id:result[:writer].id)

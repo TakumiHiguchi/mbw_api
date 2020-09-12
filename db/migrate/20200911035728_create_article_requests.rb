@@ -4,10 +4,10 @@ class CreateArticleRequests < ActiveRecord::Migration[6.0]
       t.string :key
       t.string :title
       t.text :content
-      t.integer :requestType, default: 0
+      t.integer :request_type, default: 0
       t.integer :status,      default: 0
       t.integer :count,       default: 2000
-      t.integer :maxAge,       default: 0
+      t.integer :maxage,       default: 0
       t.integer :submissionTime,       default: 0
 
       t.timestamps

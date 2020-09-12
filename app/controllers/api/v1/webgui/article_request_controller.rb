@@ -9,7 +9,7 @@ class Api::V1::Webgui::ArticleRequestController < ApplicationController
             res = ins.map do |data|
                 next({
                     title:data.title,
-                    type:data.requestType,
+                    type:data.request_type,
                     count:data.count,
                     status:data.status,
                     key:data.key
@@ -33,12 +33,12 @@ class Api::V1::Webgui::ArticleRequestController < ApplicationController
             result = ins.map do |data|
                 next({
                     title:data.title,
-                    type:data.requestType,
+                    type:data.request_type,
                     count:data.count,
                     status:data.status,
                     key:data.key,
-                    maxAge:data.maxAge,
-                    submissionTime:data.submissionTime
+                    maxAge:data.maxage,
+                    submissionTime:data.submission_time
                 })
             end
             render json: JSON.pretty_generate({
@@ -79,13 +79,13 @@ class Api::V1::Webgui::ArticleRequestController < ApplicationController
             res = {
                 title:data.title,
                 content:data.content,
-                type:data.requestType,
+                type:data.request_type,
                 status:data.status,
                 count:data.count,
                 description:data.description,
                 key:data.key,
-                maxAge:data.maxAge,
-                submissionTime:data.submissionTime          
+                maxAge:data.maxage,
+                submissionTime:data.submission_time          
             }
             render json: JSON.pretty_generate({
                 status:'SUCCESS',

@@ -3,7 +3,7 @@ class CreatePlanRegisters < ActiveRecord::Migration[6.0]
     create_table :plan_registers do |t|
       t.string :email
       t.string :key
-      t.integer :maxAge
+      t.integer :maxage
       t.string :name
       t.string :session
 
