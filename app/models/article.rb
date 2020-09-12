@@ -25,6 +25,7 @@ class Article < ApplicationRecord
     def extension(uri)
         opaque = uri.opaque
         mime_type = opaque[0, opaque.index(";")]
+        p opaque
         case mime_type
         when "image/png" then
           ".png"
