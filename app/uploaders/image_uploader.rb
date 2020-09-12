@@ -13,7 +13,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   
    # 保存するファイルの命名規則
    def filename
-      "#{secure_token}.#{file.extension}" if original_filename.present?
+      "#{secure_token}.jpg" if original_filename.present?
    end
   
    protected

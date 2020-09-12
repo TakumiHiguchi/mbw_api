@@ -5,7 +5,7 @@ class Article < ApplicationRecord
 
     def image_from_base64(b64)
         bin = Base64.decode64(b64)
-        file = Tempfile.new('img/jpg')
+        file = Tempfile.new('img')
         file.binmode
         file << bin
         file.rewind
