@@ -10,7 +10,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 )
             )
             signer = Aws::S3::Presigner.new(client: s3.client)
-            pass = pass["thumbnail"]["url"].to_s
+            pass = data.thumbnail.to_s
             presigned_url = signer.presigned_url(:get_object,bucket: ENV['S3_BUCKET'], key: pass, expires_in: 60)
 
             next({
