@@ -9,6 +9,7 @@ class Article < ApplicationRecord
         file.binmode
         file << bin
         file.rewind
-        return fire
+
+        return file
     end
 end
