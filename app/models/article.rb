@@ -4,7 +4,7 @@ class Article < ApplicationRecord
     has_many :tags, through: :article_tag_relations
 
     def image_from_base64(b64)
-        image = params[:image]
+        image = b64
         return unless image.present?
         img_params = {
             filename: image[:filename],
