@@ -11,6 +11,9 @@ class Article < ApplicationRecord
             file = decode64_tempfile(data,"test"+extension)
             p file
             self.update(thumbnail:file)
+
+            file.close
+            file.delete
         end
     end
     def decode(uri)
