@@ -20,7 +20,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 content:data.content,
                 key:data.key,
                 description:data.description,
-                thumbnail:presigned_url,
+                thumbnail:data.thumbnail,
                 releaseTime:data.release_time
             })
         end
