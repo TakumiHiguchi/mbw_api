@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class WritterControllerTest < ActionDispatch::IntegrationTest
+class WriterArticleRequestRelationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

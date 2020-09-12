@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_11_040810) do
+ActiveRecord::Schema.define(version: 2020_09_12_013421) do
 
   create_table "article_requests", force: :cascade do |t|
-    t.integer "writer_id"
     t.string "key"
     t.string "title"
     t.text "content"
@@ -22,6 +21,13 @@ ActiveRecord::Schema.define(version: 2020_09_11_040810) do
     t.integer "count", default: 2000
     t.integer "maxAge", default: 0
     t.integer "submissionTime", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "article_tag_relations", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "tag_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -89,7 +95,14 @@ ActiveRecord::Schema.define(version: 2020_09_11_040810) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "writters", force: :cascade do |t|
+  create_table "writer_article_request_relations", force: :cascade do |t|
+    t.integer "writer_id"
+    t.integer "article_request_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "writers", force: :cascade do |t|
     t.string "email"
     t.string "password"
     t.string "session"

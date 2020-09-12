@@ -1,12 +1,14 @@
 class Api::V1::Webgui::PlanRegisterController < ApplicationController
+  Root = 'http://localhost:3000'
   def index
     auth = Authentication.new()
     errorJson = RenderJson.new()
+    
     if auth.isAdmin?(email:params[:email],session:params[:session]) then
       now = Time.now.to_i
       ins = PlanRegister.where(maxAge: now..Float::INFINITY)
       result = ins.map do |data|
-        return({
+        next({
             name:data.name,
             email:data.email,
             maxAge:data.maxAge,

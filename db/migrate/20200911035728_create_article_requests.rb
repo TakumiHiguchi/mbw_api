@@ -1,7 +1,6 @@
 class CreateArticleRequests < ActiveRecord::Migration[6.0]
   def change
     create_table :article_requests do |t|
-      t.integer :writer_id
       t.string :key
       t.string :title
       t.text :content

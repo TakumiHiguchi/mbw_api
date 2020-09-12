@@ -6,9 +6,18 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       namespace 'webgui' do
-        post '/writter/signup' => 'writter#signup'
-        post '/writter/signin' => 'writter#signin'
+        post '/writer/signup' => 'writer#signup'
+        post '/writer/signin' => 'writer#signin'
+        get '/writer/home' => 'writer#home'
+        get '/article_request/can' => 'article_request#can'
+
+        #admin
+        post '/article_request/resubmit' => 'article_request#resubmit'
+
         resources :plan_register, only: [:index,:show,:create] 
+        resources :article_request, only: [:index,:show,:create,:edit] 
+        resources :unapproved_article, only: [:index,:create,:edit,:update] 
+        resources :article, only: [:index,:create,:edit,:update]
       end
     end
   end

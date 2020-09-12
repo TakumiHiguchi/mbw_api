@@ -1,11 +1,23 @@
 class Authentication
-  def isWriter?
-    
+  def isWriter?(props)
+    user = Writer.find_by(email:props[:email],session:props[:session])
+    now = Time.now.to_i
+    if user && user.maxAge > now
+      return({
+        isWriter:true,
+        writer:user
+      })
+    else
+      return({
+        isWriter:false,
+        writer:user
+      })
+    end
   end
 
   def isAdmin?(props)
     #sessionの確認
-    user = Writter.find_by(email:props[:email],session:props[:session])
+    user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
     if props[:email] == "uiljpfs4fg5hsxzrnhknpdqfx@gmail.com" && !user.nil? && user.maxAge > now
       return true
@@ -16,8 +28,8 @@ class Authentication
 
   def signin(props)
     pass = Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(props[:phrase] + 'music.branchwith'))
-    if props[:type] == "writter"
-      user = Writter.find_by(email:props[:email],password:pass)
+    if props[:type] == "writer"
+      user = Writer.find_by(email:props[:email],password:pass)
     end
     if user
       session = Digest::SHA256.hexdigest(rand(1000000000).to_s + user.email + Time.now.to_i.to_s)

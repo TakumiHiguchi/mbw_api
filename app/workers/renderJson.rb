@@ -43,6 +43,13 @@ class RenderJson
           error_code: props[:code],
           mes:'メールアドレスかパスワードが正しくありません'
         })
+      when 'AE_0007'
+        json = JSON.pretty_generate({
+          status:'ERROR',
+          api_version: props[:api_version],
+          error_code: props[:code],
+          mes:'すでに他の人に執筆されています'
+        })
       when 'AE_0014'
         json = JSON.pretty_generate({
           status:'ERROR',
