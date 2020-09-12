@@ -13,9 +13,6 @@ class Article < ApplicationRecord
             #名前を置き換える
             File.rename(file,"test"+extension)
             self.update(thumbnail:file)
-
-            file.close
-            file.delete
         end
     end
     def decode(uri)
