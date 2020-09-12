@@ -18,14 +18,21 @@ class Api::V1::Webgui::ArticleController < ApplicationController
         })
     end
     def show
-        data = Article.find_by(key:params[:id])
+        data = Article.joins(:tags).select('articles.*,tags.*,tag.key AS tag_key').where('articles.key = ?',params[:id])
+        tags = data.map do |d|
+            next({
+                key:d.tag_key,
+                name:d.name
+            })
+        end
         result = {
-            title:data.title,
-            content:data.content,
-            key:data.key,
-            description:data.description,
-            thumbnail:data.thumbnail,
-            releaseTime:data.release_time
+            title:data[0].title,
+            content:data[0].content,
+            key:data[0].key,
+            description:data[0].description,
+            thumbnail:data[0].thumbnail,
+            releaseTime:data[0].release_time,
+            tags:tags
         }
         render json: JSON.pretty_generate({
             status:'SUCCESS',
