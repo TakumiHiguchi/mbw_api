@@ -11,7 +11,7 @@ class Article < ApplicationRecord
             file = decode64_tempfile(data)
             
             #名前を置き換える
-            File.rename(file,"test"+extension)
+            File.rename(file,"/tmp/test"+extension)
             self.update(thumbnail:file)
         end
     end
