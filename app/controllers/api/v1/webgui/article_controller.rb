@@ -19,6 +19,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
     end
     def show
         data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key').where('articles.key = ?',params[:id])
+        article = Article.find_by(key:params[:id])
         tags = data.map do |d|
             next({
                 key:d.tag_key,
@@ -26,12 +27,12 @@ class Api::V1::Webgui::ArticleController < ApplicationController
             })
         end
         result = {
-            title:data[0].title,
-            content:data[0].content,
-            key:data[0].key,
-            description:data[0].description,
-            thumbnail:data[0].thumbnail,
-            releaseTime:data[0].release_time,
+            title:article.title,
+            content:article.content,
+            key:article.key,
+            description:article.description,
+            thumbnail:article.thumbnail,
+            releaseTime:article.release_time,
             tags:tags
         }
         render json: JSON.pretty_generate({
