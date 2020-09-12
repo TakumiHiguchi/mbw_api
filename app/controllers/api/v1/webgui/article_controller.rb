@@ -29,7 +29,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 key:params[:key],
                 description:params[:description],
                 thumbnail:params[:thumbnail],
-                releaseTime:params[:releaseTime],
+                release_time:params[:releaseTime],
             )
             #タグを作る
             Tag.createTag(article.id,params[:tags])
