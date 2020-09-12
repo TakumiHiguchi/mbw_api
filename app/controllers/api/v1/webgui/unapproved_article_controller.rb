@@ -96,7 +96,7 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
                     if params[:isSubmission] then 
                         aR.update(
                             status:2,
-                            submissionTime:Time.now.to_i
+                            submission_time:Time.now.to_i
                         )
                     else
                         aR.update(
