@@ -33,7 +33,7 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
             if aR
                 now = Time.now.to_i
                 #執筆中にする
-                aR.update(status:1,maxAge:now+86400)
+                aR.update(status:1,maxage:now+86400)
                 #ユーザーと関連付ける
                 WriterArticleRequestRelation.create(writer_id:result[:writer].id,article_request_id:aR.id)
                 #記事を作成する
