@@ -12,6 +12,8 @@ class Article < ApplicationRecord
             file.rewind
         
             self.update(thumbnail:file)
+        else
+            self.update(thumbnail:nil)
         end
     end
 end
