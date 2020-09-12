@@ -3,7 +3,7 @@ class Article < ApplicationRecord
     has_many :article_tag_relations
     has_many :tags, through: :article_tag_relations
 
-    def image_from_base64(b64)
+    def self.image_from_base64(b64)
         bin = Base64.decode64(b64)
         file = Tempfile.new('img')
         file.binmode
