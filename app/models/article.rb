@@ -4,22 +4,37 @@ class Article < ApplicationRecord
     has_many :tags, through: :article_tag_relations
 
     def image_from_base64(b64)
-        image = b64
-        return unless image.present?
-        img_params = {
-            filename: image[:filename],
-            type: image[:type],
-            tempfile: decode64_tempfile(image[:tempfile], image[:filename])
-        }
-        self.update(thumbnail:img_params)
+        uri = URI.parse(b64)
+        if uri.scheme == "data" then
+            data = decode(uri)
+            extension = extension(uri)
+            file = decode64_tempfile(data,"test"+extension)
+            self.update(thumbnail:file)
+        end
     end
-    def decode64_tempfile(file, filename)
-        tempfile = URI.decode(file)
-        tempfile = Base64.decode64(tempfile)
+    def decode(uri)
+        opaque = uri.opaque
+        data = opaque[opaque.index(",") + 1, opaque.size]
+        Base64.decode64(data)
+    end
+    
+    def extension(uri)
+        opaque = uri.opaque
+        mime_type = opaque[0, opaque.index(";")]
+        case mime_type
+        when "image/png" then
+          ".png"
+        when "image/jpeg" then
+          ".jpg"
+        else
+          raise "Unsupport Content-Type"
+        end
+    end
+    def decode64_tempfile(f, filename)
         file = Tempfile.new(filename)
         file.binmode
-        file << tempfile
+        file << f
         file.rewind
-        file
-      end
+        return file
+    end
 end
