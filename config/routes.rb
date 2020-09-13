@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get 'plan_register/index'
-  get 'plan_register/show'
-  get 'plan_register/create'
   #api
   namespace 'api' do
     namespace 'v1' do

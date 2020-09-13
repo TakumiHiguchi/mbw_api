@@ -2,7 +2,7 @@ class Api::V1::Webgui::SearchController < ApplicationController
     def index
         case params[:model]
             when 'lyric'
-                ins = Lyric.search(query:params[:q],limit:params[:limit])
+                ins = Lyric.joins(:favs).select("lyrics.*, favs.*").search(query:params[:q],limit:params[:limit])
                 result = ins.map do |data|
                     next({
                         title:data.title,
@@ -14,6 +14,7 @@ class Api::V1::Webgui::SearchController < ApplicationController
                         lyrics:data.lyrics,
                         amazonUrl:data.amazonUrl,
                         iTunesUrl:data.iTunesUrl,
+                        fav:data.fav
                     })
                 end
             when 'article'
