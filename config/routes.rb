@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         #admin
         post '/article_request/resubmit' => 'article_request#resubmit'
 
+        resources :lyrics, only: [:show] 
         resources :plan_register, only: [:index,:show,:create] 
         resources :article_request, only: [:index,:show,:create,:edit] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
