@@ -9,7 +9,7 @@ class Article < ApplicationRecord
             data = decode(uri)
             extension = extension(uri)
             file = decode64_tempfile(data)
-            
+            p extension
             #名前を置き換える
             File.rename(file,"/tmp/test"+extension)
             p File.dirname(file).to_s + File.basename(file).to_s
