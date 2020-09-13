@@ -2,8 +2,6 @@ class Api::V1::Webgui::ArticleController < ApplicationController
     def index
         article = Article.all
         result = article.map do |data|
-
-
             next({
                 title:data.title,
                 content:data.content,
@@ -33,7 +31,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
             content:article.content,
             key:article.key,
             description:article.description,
-            thumbnail:article.thumbnail,
+            thumbnail:article.thumbnail.to_s,
             releaseTime:article.release_time,
             tags:tags
         }
