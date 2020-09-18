@@ -6,10 +6,10 @@ class Article < ApplicationRecord
 
 
   def update_image_from_url(url)
-    p url
-    self.remote_thumbnail_url = url
+    self.remote_thumbnail_url = url.to_s
     p remote_thumbnail_url
     self.save
+    p self.save
   end
     def set_key
       o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
