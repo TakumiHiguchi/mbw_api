@@ -56,7 +56,10 @@ class Api::V1::Webgui::ArticleController < ApplicationController
             )
             article.image_from_base64(params[:thumbnail])
             #タグを作る
-            Tag.createTag(article.id,params[:tags])
+            params[:tags].each do |tag_name|
+                Tag.createTag(article.id,tag_name)
+            end
+            
         
             uaArticle = ArticleRequest.find_by(key:params[:key])
             #支払いを更新する 

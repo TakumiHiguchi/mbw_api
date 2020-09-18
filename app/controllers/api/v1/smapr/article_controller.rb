@@ -13,7 +13,9 @@ class Api::V1::Smapr::ArticleController < ApplicationController
             )
             article.update_image_from_url(params[:thumbnail])
             #タグを作る
-            Tag.createTag(article.id,params[:tags])
+            Tag.createTag(article.id,params[:tag1])
+            Tag.createTag(article.id,params[:tag2])
+            Tag.createTag(article.id,params[:tag3])
         
             uaArticle = ArticleRequest.find_by(key:params[:key])
             #支払いを更新する 
