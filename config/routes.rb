@@ -18,6 +18,9 @@ Rails.application.routes.draw do
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
         resources :article, only: [:index,:show,:create,:edit,:update]
       end
+      namespace 'smapr' do
+        resources :article, only: [:create]
+      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

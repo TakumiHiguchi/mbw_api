@@ -1,8 +1,17 @@
 class Article < ApplicationRecord
-    mount_uploader :thumbnail, ImageUploader
-    has_many :article_tag_relations
-    has_many :tags, through: :article_tag_relations
+  mount_uploader :thumbnail, ImageUploader
+  has_many :article_tag_relations
+  has_many :tags, through: :article_tag_relations
 
+
+
+  def update_image_from_url(url)
+    self.update(remote_thumbnail_url: url)
+  end
+    def set_key
+      o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
+      self.key = (0...20).map { o[rand(o.length)] }.join
+    end
     def image_from_base64(b64)
         uri = URI.parse(b64)
         if uri.scheme == "data" then
