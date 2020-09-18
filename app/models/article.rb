@@ -4,13 +4,6 @@ class Article < ApplicationRecord
   has_many :tags, through: :article_tag_relations
 
 
-
-  def update_image_from_url(url)
-    article = Article.first
-    article.remote_thumbnail_url = url.to_s
-    article.save
-    p article.save
-  end
     def set_key
       o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
       self.key = (0...20).map { o[rand(o.length)] }.join

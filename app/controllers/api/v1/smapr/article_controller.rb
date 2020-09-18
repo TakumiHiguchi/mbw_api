@@ -11,7 +11,7 @@ class Api::V1::Smapr::ArticleController < ApplicationController
                 description: params[:description],
                 release_time: params[:releaseTime],
             )
-            article.update_image_from_url(params[:thumbnail])
+            article.image_from_base64(params[:thumbnail])
             #タグを作る
             Tag.createTag(article.id,params[:tag1])
             Tag.createTag(article.id,params[:tag2])
