@@ -2,7 +2,7 @@ class Tag < ApplicationRecord
   has_many :article_tag_relations
   has_many :articles, through: :article_tag_relations
 
-  def createTag(article_id,tag_name)
+  def self.createTag(article_id,tag_name)
     tagReference = self.find_by(name:tag_name)
     if !tagReference
       o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
