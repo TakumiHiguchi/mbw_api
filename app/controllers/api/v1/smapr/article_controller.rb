@@ -16,21 +16,6 @@ class Api::V1::Smapr::ArticleController < ApplicationController
             Tag.createTag(article.id,params[:tag1])
             Tag.createTag(article.id,params[:tag2])
             Tag.createTag(article.id,params[:tag3])
-        
-            uaArticle = ArticleRequest.find_by(key:params[:key])
-            #支払いを更新する 
-            ins = Payment.find_by(writer_id:user.id)
-            ins.update(unsettled:ins.unsettled + 500)
-            #ライターが保存する記事データベースから消す
-            ua = UnapprovedArticle.find_by(article_request_id:uaArticle.id)
-            ua.delete
-
-            #完成済みにする
-            uaArticle.update(status:4)
-            render json: JSON.pretty_generate({
-                status:'SUCCESS',
-                api_version: 'v1'
-            })
         else
             render json: errorJson.createError(code:'AE_0001',api_version:'v1')
         end
