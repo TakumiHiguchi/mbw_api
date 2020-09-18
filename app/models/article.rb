@@ -6,7 +6,8 @@ class Article < ApplicationRecord
 
 
   def update_image_from_url(url)
-    self.update(remote_thumbnail_url: url)
+    self.remote_thumbnail_url = url
+    self.save
   end
     def set_key
       o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten

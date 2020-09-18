@@ -7,7 +7,7 @@ class Tag < ApplicationRecord
     if !tagReference
       o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
       key =(0...20).map { o[rand(o.length)] }.join
-      tagReference = self.create(name:tag,key:key)
+      tagReference = self.create(name:tag_name, key:key)
     end
     ArticleTagRelation.create(article_id:article_id,tag_id:tagReference.id)
   end
