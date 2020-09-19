@@ -9,7 +9,7 @@ class Tag < ApplicationRecord
       key =(0...20).map { o[rand(o.length)] }.join
       tagReference = self.create(name:tag_name, key:key)
     end
-    if !ArticleTagRelation.exists?
+    if !ArticleTagRelation.exists?(article_id:article_id,tag_id:tagReference.id)
       ArticleTagRelation.create(article_id:article_id,tag_id:tagReference.id)
     end
   end
