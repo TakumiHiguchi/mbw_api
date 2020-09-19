@@ -32,6 +32,8 @@ class Article < ApplicationRecord
           ".png"
         when "image/jpeg" then
           ".jpg"
+        when "image/jpg" then
+          ".jpg"
         else
           raise "Unsupport Content-Type"
         end
