@@ -26,8 +26,13 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 name:d.name
             })
         end
+        tag_list = data.map do |d|
+            Tag.create_hash(key:d.tag_key)
+        end
+
         #次のおすすめ記事を返す
         next_articles = Article.search_create_hash(query: tags[0][:name],limit: 10)
+        
         result = {
             title:article.title,
             content:article.content,
