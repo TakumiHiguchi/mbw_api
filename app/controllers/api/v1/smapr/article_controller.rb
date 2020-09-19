@@ -3,7 +3,6 @@ class Api::V1::Smapr::ArticleController < ApplicationController
         auth = Authentication.new()
         errorJson = RenderJson.new()
         if auth.isAdmin?(email:params[:email],session:params[:session]) then
-            user = Writer.joins(:article_requests).select('writers.*,article_requests.key').find_by('article_requests.key = ?',params[:key])
             article = Article.create(
                 title: params[:title],
                 content: params[:content],
