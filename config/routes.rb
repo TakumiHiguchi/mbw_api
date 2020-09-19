@@ -21,6 +21,9 @@ Rails.application.routes.draw do
       namespace 'smapr' do
         resources :article, only: [:create]
       end
+      namespace 'mbw' do
+        resources :search, only: [:index]
+      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

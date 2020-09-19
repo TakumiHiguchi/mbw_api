@@ -4,10 +4,41 @@ class Article < ApplicationRecord
   has_many :tags, through: :article_tag_relations
 
 
-    def set_key
-      o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
-      self.key = (0...20).map { o[rand(o.length)] }.join
+  def set_key
+    o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
+    self.key = (0...20).map { o[rand(o.length)] }.join
+  end
+  def self.search(props)
+    return self.all.limit(props[:limit]) unless props[:query]
+    return self.where(
+      ['UPPER(title) LIKE ?', "%#{props[:query].upcase}%"]
+    ).limit(props[:limit])
+  end
+  def self.search_create_hash(props)
+    articles = self.search(props)
+    result = articles.map do |article|
+      #タグを取得
+      tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
+      tags = tag_datas.map do |d|
+        next({
+            key:d.key,
+            name:d.name
+        })
+      end
+      next({
+        title:article.title,
+        content:article.content,
+        key:article.key,
+        description:article.description,
+        thumbnail:article.thumbnail.to_s,
+        releaseTime:article.release_time,
+        tags:tags
+      })
     end
+
+    return result
+  end
+
     def image_from_base64(b64)
         uri = URI.parse(b64)
         if uri.scheme == "data" then

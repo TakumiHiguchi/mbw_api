@@ -26,6 +26,8 @@ class Api::V1::Webgui::ArticleController < ApplicationController
                 name:d.name
             })
         end
+        #次のおすすめ記事を返す
+        next_articles = Article.search_create_hash(query: tags[0][:name],limit: 10)
         result = {
             title:article.title,
             content:article.content,
@@ -33,7 +35,8 @@ class Api::V1::Webgui::ArticleController < ApplicationController
             description:article.description,
             thumbnail:article.thumbnail.to_s,
             releaseTime:article.release_time,
-            tags:tags
+            tags:tags,
+            next_articles: next_articles
         }
         render json: JSON.pretty_generate({
             status:'SUCCESS',
