@@ -20,28 +20,22 @@ class Api::V1::Webgui::ArticleController < ApplicationController
     def show
         data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key').where('articles.key = ?',params[:id])
         article = Article.find_by(key:params[:id])
-        tags = data.map do |d|
-            next({
-                key:d.tag_key,
-                name:d.name
-            })
-        end
         tag_list = data.map do |d|
-            Tag.create_hash(key:d.tag_key)
+            Tag.find_by(key: d.tag_key).create_hash_for_article_page
         end
 
         #次のおすすめ記事を返す
-        next_articles = Article.search_create_hash(query: tags[0][:name],limit: 10)
+        next_articles = Article.search_create_hash(query: tag_list[0][:name], limit: 10)
         
         result = {
-            title:article.title,
-            content:article.content,
-            key:article.key,
-            description:article.description,
-            thumbnail:article.thumbnail.to_s,
-            releaseTime:article.release_time,
-            tags:tags,
-            next_articles: next_articles
+            title: article.title,
+            content: article.content,
+            key: article.key,
+            description: article.description,
+            thumbnail: article.thumbnail.to_s,
+            releaseTime: article.release_time,
+            next_articles: next_articles,
+            tags: tag_list
         }
         render json: JSON.pretty_generate({
             status:'SUCCESS',
