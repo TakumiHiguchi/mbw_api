@@ -57,6 +57,13 @@ class RenderJson
           error_code: props[:code],
           mes:'ユーザーが存在しません。契約主に問い合わせてください'
         })
+      when 'AE_0101'
+        json = JSON.pretty_generate({
+          status:'ERROR',
+          api_version: props[:api_version],
+          error_code: props[:code],
+          mes:'タグが存在しません。'
+        })
     end
     return json
   end

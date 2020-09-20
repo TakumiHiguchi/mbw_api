@@ -16,11 +16,11 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
     t.string "key"
     t.string "title"
     t.text "content"
-    t.integer "requestType", default: 0
+    t.integer "request_type", default: 0
     t.integer "status", default: 0
     t.integer "count", default: 2000
-    t.integer "maxAge", default: 0
-    t.integer "submissionTime", default: 0
+    t.integer "maxage", default: 0
+    t.integer "submission_time", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -38,8 +38,8 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
     t.string "key"
     t.text "description"
     t.string "thumbnail"
-    t.integer "releaseTime"
-    t.boolean "isIndex"
+    t.integer "release_time", default: 0
+    t.boolean "isindex", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
   create_table "plan_registers", force: :cascade do |t|
     t.string "email"
     t.string "key"
-    t.integer "maxAge"
+    t.integer "maxage"
     t.string "name"
     t.string "session"
     t.datetime "created_at", precision: 6, null: false
@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.string "key"
+    t.string "thumbnail"
+    t.string "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -113,7 +115,7 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
     t.string "email"
     t.string "password"
     t.string "session"
-    t.integer "maxAge"
+    t.integer "maxage"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
