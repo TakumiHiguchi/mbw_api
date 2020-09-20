@@ -21,7 +21,7 @@ class Api::V1::Webgui::ArticleController < ApplicationController
         data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key').where('articles.key = ?',params[:id])
         article = Article.find_by(key:params[:id])
         tag_list = data.map do |d|
-            Tag.find_by(key: d.tag_key).create_hash_for_article_page
+            Tag.find_by(key: d.tag_key).create_hash_for_article_page(key: params[:id])
         end
 
         #次のおすすめ記事を返す
