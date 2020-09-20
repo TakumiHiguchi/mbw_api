@@ -1,6 +1,6 @@
 class Api::V1::Webgui::ArticleController < ApplicationController
     def index
-        article = Article.all
+        article = Article.all.limit(params[:limit])
         result = article.map do |data|
             next({
                 title:data.title,
