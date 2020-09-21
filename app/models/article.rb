@@ -9,7 +9,7 @@ class Article < ApplicationRecord
     self.key = (0...20).map { o[rand(o.length)] }.join
   end
   def self.search(props)
-    return self.all.limit(props[:limit]) unless props[:query]
+    return self.limit(props[:limit]) unless props[:query]
     return self.where(
       ['UPPER(title) LIKE ?', "%#{props[:query].upcase}%"]
     ).limit(props[:limit])

@@ -1,16 +1,6 @@
 class Api::V1::Webgui::ArticleController < ApplicationController
     def index
-        article = Article.all.limit(params[:limit])
-        result = article.map do |data|
-            next({
-                title:data.title,
-                content:data.content,
-                key:data.key,
-                description:data.description,
-                thumbnail:data.thumbnail.to_s,
-                releaseTime:data.release_time
-            })
-        end
+        result = Article.search_create_hash(query: nil,limit:params[:limit])
         render json: JSON.pretty_generate({
             status:'SUCCESS',
             api_version: 'v1',
