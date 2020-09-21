@@ -3,11 +3,7 @@ class Lyric < ApplicationRecord
     has_many :favs
     def self.search(props)
         return self.all.limit(props[:limit]) unless props[:query]
-        result = self.where(
-            ['UPPER(artist) ? OR UPPER(title) LIKE ?', 
-            "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]
-        ).limit(props[:limit])
-
+        result = self.where(['UPPER(artist) LIKE ? OR UPPER(title) LIKE ?', "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]).limit(props[:limit])
         
         return result
     end
@@ -17,21 +13,21 @@ class Lyric < ApplicationRecord
       lyrics = self.search(props)
       result = lyrics.map do |lyric|
         next({
-          title:lyrics.title,
-          artist:lyrics.artist,
-          key:lyrics.key,
-          jucket:lyrics.jucket.to_s,
-          lyricist:lyrics.lyricist,
-          composer:lyrics.composer,
-          lyrics:lyrics.lyrics,
-          amazonUrl:lyrics.amazonUrl,
-          iTunesUrl:lyrics.iTunesUrl,
+          title:lyric.title,
+          artist:lyric.artist,
+          key:lyric.key,
+          jucket:lyric.jucket.to_s,
+          lyricist:lyric.lyricist,
+          composer:lyric.composer,
+          lyrics:lyric.lyrics,
+          amazonUrl:lyric.amazonUrl,
+          iTunesUrl:lyric.iTunesUrl,
         })
       end
     rescue
       result = []
     end
-        return result
+      return result
     end
     
 end
