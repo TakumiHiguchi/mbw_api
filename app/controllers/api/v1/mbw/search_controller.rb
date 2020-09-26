@@ -5,7 +5,7 @@ class Api::V1::Mbw::SearchController < ApplicationController
                 result,pagenation = Lyric.joins(:favs).select("lyrics.*, favs.*").search_create_hash(query: params[:q], limit:params[:limit], page: params[:page])
                 
             when 'article'
-                result = Article.search_create_hash(query:params[:q],limit:params[:limit])
+                result,pagenation = Article.search_create_hash(query:params[:q],limit:params[:limit], page: params[:page])
         end
         render json: JSON.pretty_generate({
             status:'SUCCESS',

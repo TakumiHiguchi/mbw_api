@@ -9,13 +9,23 @@ class Article < ApplicationRecord
     self.key = (0...20).map { o[rand(o.length)] }.join
   end
   def self.search(props)
-    return self.limit(props[:limit]) unless props[:query]
+    page = props[:page]
+    page ||= 1
+    return self.page(page).per(props[:limit]) unless props[:query]
     return self.where(
       ['UPPER(title) LIKE ?', "%#{props[:query].upcase}%"]
-    ).limit(props[:limit])
+    ).page(page).per(props[:limit])
   end
   def self.search_create_hash(props)
     articles = self.search(props)
+    pagenation = {
+      current:  articles.current_page,
+      previous: articles.prev_page,
+      next:     articles.next_page,   
+      limit_value: articles.limit_value,
+      pages:    articles.total_pages,
+      count:    articles.total_count
+    }
     result = articles.map do |article|
       #タグを取得
       tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
@@ -36,7 +46,7 @@ class Article < ApplicationRecord
       })
     end
 
-    return result
+    return result,pagenation
   end
 
     def image_from_base64(b64)
