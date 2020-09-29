@@ -9,7 +9,7 @@ class Api::V1::Mbw::ArticleController < ApplicationController
         })
     end
     def show
-        data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key').where('articles.key = ?',params[:id])
+        data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key, articles.thumbnail AS article_thumbnail').where('articles.key = ?',params[:id])
         article = Article.find_by(key:params[:id])
         tag_list = data.map do |d|
             Tag.find_by(key: d.tag_key).create_hash_for_article_page(key: params[:id])

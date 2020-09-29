@@ -8,6 +8,49 @@ class Article < ApplicationRecord
     o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
     self.key = (0...20).map { o[rand(o.length)] }.join
   end
+
+  def self.create_article_hash(props)
+    page = props[:page]
+    page ||= 1
+    case props[:search_type]
+    when 'tag' 
+      articles = self.search_from_tag(props)
+    else
+      articles = self.search(props)
+    end
+    pagenation = {
+      current:  articles.current_page,
+      previous: articles.prev_page,
+      next:     articles.next_page,   
+      limit_value: articles.limit_value,
+      pages:    articles.total_pages,
+      count:    articles.total_count
+    }
+    result = articles.map do |article|
+      tags =[]
+      #タグを取得
+      if props[:with_tag]
+        tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
+        tags = tag_datas.map do |d|
+          next({
+              key:d.key,
+              name:d.name
+          })
+        end
+      end
+      hash = {
+        title:article.title,
+        content:article.content,
+        key:article.key,
+        description:article.description,
+        releaseTime:article.release_time,
+        tags:tags
+      }
+      next hash
+    end
+    return result,pagenation
+  end
+
   def self.search(props)
     page = props[:page]
     page ||= 1
@@ -16,6 +59,16 @@ class Article < ApplicationRecord
       ['UPPER(title) LIKE ?', "%#{props[:query].upcase}%"]
     ).page(page).per(props[:limit])
   end
+
+  def self.search_from_tag(props)
+    page = props[:page]
+    page ||= 1
+    return self.page(page).per(props[:limit]) unless props[:query]
+    return self.where(
+      ['UPPER(tags.name) LIKE ?', "%#{props[:query].upcase}%"]
+    ).page(page).per(props[:limit])
+  end
+
   def self.search_create_hash(props)
     articles = self.search(props)
     pagenation = {
