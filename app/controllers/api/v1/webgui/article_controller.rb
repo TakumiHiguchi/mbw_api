@@ -1,6 +1,6 @@
 class Api::V1::Webgui::ArticleController < ApplicationController
     def index
-        result,pagenation = Article.create_article_hash(search_type: 'article', query: nil,page: 1, limit: 20, with_thumbnail: true, with_tag: true)
+        result,pagenation = Article.order(id: "DESC").create_article_hash(search_type: 'article', query: nil,page: 1, limit: 20, with_thumbnail: true, with_tag: true)
         render json: JSON.pretty_generate({
             status:'SUCCESS',
             api_version: 'v1',
