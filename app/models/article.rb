@@ -30,7 +30,7 @@ class Article < ApplicationRecord
       hash = {
         title:article.title,
         content:article.content,
-        key:article.key,
+        key:article.article_key,
         description:article.description,
         releaseTime:article.release_time
       }
