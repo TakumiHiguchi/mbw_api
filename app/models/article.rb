@@ -30,10 +30,16 @@ class Article < ApplicationRecord
       hash = {
         title:article.title,
         content:article.content,
-        key:article.article_key,
         description:article.description,
         releaseTime:article.release_time
       }
+      #key
+      case props[:search_type]
+      when 'tag' 
+        hash[:key] = article.article_key
+      else
+        hash[:key] = article.key
+      end
       #サムネイル
       if props[:with_thumbnail]
         case props[:search_type]

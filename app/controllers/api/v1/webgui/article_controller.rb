@@ -1,10 +1,11 @@
 class Api::V1::Webgui::ArticleController < ApplicationController
     def index
-        result = Article.search_create_hash(query: nil,limit:params[:limit])
+        result,pagenation = Article.create_article_hash(search_type: 'article', query: nil,page: 1, limit: 20, with_thumbnail: true, with_tag: true)
         render json: JSON.pretty_generate({
             status:'SUCCESS',
             api_version: 'v1',
-            result:result
+            result:result,
+            pagenation: pagenation
         })
     end
     def show
