@@ -44,7 +44,7 @@ class Article < ApplicationRecord
           hash[:thumbnail] = article.thumbnail.to_s
         end
       end
-      #タグを取得
+      #タグ
       if props[:with_tag]
         tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
         tags = tag_datas.map do |d|

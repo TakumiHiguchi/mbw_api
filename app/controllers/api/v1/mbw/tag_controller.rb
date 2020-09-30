@@ -6,9 +6,9 @@ class Api::V1::Mbw::TagController < ApplicationController
     tag = Tag.find_by(key: params[:id])
     if tag
       tag_hash = tag.create_hash
-      tag_hash[:articles],pagenation = Article.search_create_hash(query: tag.name, limit: 20)
+      tag_hash[:articles],pagenation = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key,articles.thumbnail AS articles_thumbnail').create_article_hash(search_type: 'tag', query: tag.name, limit: 20, with_thumbnail: true, with_tag: true)
       tag_hash[:lyrics],pagenation = Lyric.joins(:favs).select("lyrics.*, favs.*").search_create_hash(query: tag.name, limit: 20)
-      tag_hash[:recomanded] = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key,articles.thumbnail AS articles_thumbnail').create_article_hash(search_type: 'tag', query: tag.name, limit: 10, with_thumbnail: true)
+      tag_hash[:recomanded],pagenation = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key,articles.thumbnail AS articles_thumbnail').create_article_hash(search_type: 'tag', query: tag.name, limit: 10, with_thumbnail: true)
       render json: JSON.pretty_generate({
         status:'SUCCESS',
         api_version: 'v1',
