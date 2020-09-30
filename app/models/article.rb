@@ -27,7 +27,18 @@ class Article < ApplicationRecord
       count:    articles.total_count
     }
     result = articles.map do |article|
-      tags =[]
+      hash = {
+        title:article.title,
+        content:article.content,
+        key:article.key,
+        description:article.description,
+        releaseTime:article.release_time
+      }
+      #サムネイル
+      if props[:with_thumbnail]
+        presigned_url = self.s3_presigner(path: "uploads/article/thum/#{article.thumbnail.to_s}")
+        hash[:thumbnail] = presigned_url
+      end
       #タグを取得
       if props[:with_tag]
         tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
@@ -37,15 +48,9 @@ class Article < ApplicationRecord
               name:d.name
           })
         end
+        hash[:tags] = tags
       end
-      hash = {
-        title:article.title,
-        content:article.content,
-        key:article.key,
-        description:article.description,
-        releaseTime:article.release_time,
-        tags:tags
-      }
+      
       next hash
     end
     return result,pagenation
