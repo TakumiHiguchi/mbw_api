@@ -36,8 +36,13 @@ class Article < ApplicationRecord
       }
       #サムネイル
       if props[:with_thumbnail]
-        presigned_url = Article.new.s3_presigner(path: "uploads/article/thum/#{article.thumbnail.to_s}")
-        hash[:thumbnail] = presigned_url
+        case props[:search_type]
+        when 'tag' 
+          presigned_url = Article.new.s3_presigner(path: "uploads/article/thumbnail/#{article.articles_thumbnail.to_s}")
+          hash[:thumbnail] = presigned_url
+        else
+          hash[:thumbnail] = article.thumbnail.to_s
+        end
       end
       #タグを取得
       if props[:with_tag]
