@@ -36,7 +36,7 @@ class Article < ApplicationRecord
       }
       #サムネイル
       if props[:with_thumbnail]
-        presigned_url = self.s3_presigner(path: "uploads/article/thum/#{article.thumbnail.to_s}")
+        presigned_url = Article.new.s3_presigner(path: "uploads/article/thum/#{article.thumbnail.to_s}")
         hash[:thumbnail] = presigned_url
       end
       #タグを取得
