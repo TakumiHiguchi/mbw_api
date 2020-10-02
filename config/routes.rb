@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       namespace 'webgui' do
+        namespace 'admin' do
+          resources :article, only: [:index,:show,:create,:edit,:update]
+        end
         post '/writer/signup' => 'writer#signup'
         post '/writer/signin' => 'writer#signin'
         get '/writer/home' => 'writer#home'
