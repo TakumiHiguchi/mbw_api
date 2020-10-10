@@ -90,6 +90,8 @@ GEM
     diff-lcs (1.4.4)
     erubi (1.9.0)
     excon (0.76.0)
+    faker (2.14.0)
+      i18n (>= 1.6, < 2)
     ffi (1.13.1)
     fog-aws (3.6.7)
       fog-core (~> 2.1)
@@ -240,6 +242,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
   carrierwave
+  faker
   fog-aws
   kaminari
   listen (~> 3.2)
