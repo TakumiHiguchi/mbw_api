@@ -18,7 +18,13 @@ class Article < ApplicationRecord
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_index
     end
-    next_articles = Article.create_article_hash({ :query => tag_list[0][:name], :limit => 10, :with_thumbnail => true, :with_tag => true })
+    next_articles = Article.create_article_hash({
+      :query => tag_list[0][:name],
+      :limit => 10,
+      :with_thumbnail => true,
+      :with_tag => true
+    })
+
     return({
       title: self.title,
       content: self.content,
