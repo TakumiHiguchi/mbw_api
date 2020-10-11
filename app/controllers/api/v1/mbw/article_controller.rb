@@ -1,16 +1,16 @@
 class Api::V1::Mbw::ArticleController < ApplicationController
   def index
-    result,pagenation = Article.publish_only.index_only.latest.create_article_hash({ :query => nil, :with_thumbnail => true, :with_tag => true })
+    result, pagenation = Article.publish_only.index_only.latest.create_article_hash({ :query => nil, :with_thumbnail => true, :with_tag => true })
     render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1',
-        result:result,
-        pagenation: pagenation
+      status:'SUCCESS',
+      api_version: 'v1',
+      result:result,
+      pagenation: pagenation
     })
   end
   def show
       data = Article.joins(:tags).select('articles.*,tags.*,tags.key AS tag_key, articles.thumbnail AS article_thumbnail').where('articles.key = ?',params[:id])
-      article = Article.find_by(key:params[:id])
+      article = Article.find_by(:key => params[:id])
       tag_list = data.map do |d|
           Tag.find_by(key: d.tag_key).create_hash_for_article_page(key: params[:id])
       end
