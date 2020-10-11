@@ -2,12 +2,11 @@ class Api::V1::Mbw::ArticleController < Api::V1::Mbw::BaseController
   before_action :set_articles, :only => [:index, :show]
 
   def index
-    result, pagenation = @article.latest.create_article_hash({ :query => nil, :with_thumbnail => true, :with_tag => true })
+    result = @article.latest.create_article_hash({ :query => nil, :with_thumbnail => true, :with_tag => true })
     render status: 200, json: JSON.pretty_generate({
       status: 200,
       api_version: 'v1',
-      result:result,
-      pagenation: pagenation
+      result:result
     })
   end
   def show

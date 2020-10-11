@@ -18,7 +18,7 @@ class Article < ApplicationRecord
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_index
     end
-    next_articles,pagenation = Article.create_article_hash({ :query => tag_list[0][:name], :limit => 10, :with_thumbnail => true, :with_tag => true })
+    next_articles = Article.create_article_hash({ :query => tag_list[0][:name], :limit => 10, :with_thumbnail => true, :with_tag => true })
     return({
       title: self.title,
       content: self.content,
@@ -40,14 +40,6 @@ class Article < ApplicationRecord
     else
       articles = self.search(props)
     end
-    pagenation = {
-      current:  articles.current_page,
-      previous: articles.prev_page,
-      next:     articles.next_page,   
-      limit_value: articles.limit_value,
-      pages:    articles.total_pages,
-      count:    articles.total_count
-    }
     result = articles.map do |article|
       hash = {
         title:article.title,
@@ -86,7 +78,20 @@ class Article < ApplicationRecord
       
       next hash
     end
-    return result,pagenation
+
+    if props[:pagenation]
+      pagenation = {
+        current:  articles.current_page,
+        previous: articles.prev_page,
+        next:     articles.next_page,   
+        limit_value: articles.limit_value,
+        pages:    articles.total_pages,
+        count:    articles.total_count
+      }
+      return result,pagenation
+    else
+      return result
+    end
   end
 
   def self.search(props)
