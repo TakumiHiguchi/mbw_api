@@ -1,8 +1,13 @@
 class Article < ApplicationRecord
+  #アソシエーション
   mount_uploader :thumbnail, ImageUploader
   has_many :article_tag_relations
   has_many :tags, through: :article_tag_relations
 
+  # スコープ
+  scope :publish_only, -> { where(:release_time => 0..Time.new.to_i) }
+  scope :index_only, -> { where(:isindex => true) }
+  scope :latest, -> { order(:id => "DESC") }
 
   def set_key
     o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
