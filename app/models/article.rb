@@ -14,6 +14,23 @@ class Article < ApplicationRecord
     self.key = (0...20).map { o[rand(o.length)] }.join
   end
 
+  def create_article_hash_for_article_index
+    tag_list = self.tags.map do |tag|
+      tag.create_hash_for_article_index
+    end
+    next_articles,pagenation = Article.create_article_hash({ :query => tag_list[0][:name], :limit => 10, :with_thumbnail => true, :with_tag => true })
+    return({
+      title: self.title,
+      content: self.content,
+      key: self.key,
+      description: self.description,
+      thumbnail: self.thumbnail.to_s,
+      releaseTime: self.release_time,
+      next_articles: next_articles,
+      tags: tag_list
+    })
+  end
+
   def self.create_article_hash(props)
     page = props[:page]
     page ||= 1

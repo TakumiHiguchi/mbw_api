@@ -21,24 +21,22 @@ class Tag < ApplicationRecord
     end
   end
 
-  def create_hash_for_article_page(props)
+  def create_hash_for_article_index
     hash = self.create_hash
-    articles = Article.joins(:tags).select('articles.key AS article_key, tags.*').where.not('articles.key = ?', props[:key]).where('tags.key = ?', self.key).limit(3)
     #1記事も存在しなかった場合return
-    if articles.length == 0
+    if self.articles.length == 0
       hash[:related_article] = []
       return hash
     end
 
-    article_hash = articles.map do |article|
-      article_data = Article.find_by(key: article.article_key)
+    article_hash = self.articles.limit(3).map do |article|
       next({
-        title: article_data.title,
-        content: article_data.content,
-        key: article_data.key,
-        description: article_data.description,
-        thumbnail: article_data.thumbnail.to_s,
-        releaseTime: article_data.release_time,
+        title: article.title,
+        content: article.content,
+        key: article.key,
+        description: article.description,
+        thumbnail: article.thumbnail.to_s,
+        releaseTime: article.release_time,
       })
     end
     hash[:related_article] = article_hash
