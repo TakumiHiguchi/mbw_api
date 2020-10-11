@@ -45,7 +45,7 @@ def development_seed(create_count)
 
   # lyrics
   create_count[:lyrics].times do |count|
-    Lyric.create(
+    lyric = Lyric.create(
       :title => Faker::Lorem.sentence,
       :key => base_worker.get_key,
       :artist => Faker::Artist.name,
@@ -56,6 +56,10 @@ def development_seed(create_count)
       :amazonUrl => nil,
       :iTunesUrl => nil
     )
+    lyric.favs.build(
+      :fav => rand(10000)
+    )
+    lyric.save
     base_worker.view_remaining_percentage({ label: "Yuz: Lyrics", count: count+1, max: create_count[:tag] })
   end
 end
