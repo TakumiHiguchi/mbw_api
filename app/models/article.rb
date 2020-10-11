@@ -118,39 +118,6 @@ class Article < ApplicationRecord
     ).page(page).per(props[:limit])
   end
 
-  def self.search_create_hash(props)
-    articles = self.search(props)
-    pagenation = {
-      current:  articles.current_page,
-      previous: articles.prev_page,
-      next:     articles.next_page,   
-      limit_value: articles.limit_value,
-      pages:    articles.total_pages,
-      count:    articles.total_count
-    }
-    result = articles.map do |article|
-      #タグを取得
-      tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
-      tags = tag_datas.map do |d|
-        next({
-            key:d.key,
-            name:d.name
-        })
-      end
-      next({
-        title:article.title,
-        content:article.content,
-        key:article.key,
-        description:article.description,
-        thumbnail:article.thumbnail.to_s,
-        releaseTime:article.release_time,
-        tags:tags
-      })
-    end
-
-    return result,pagenation
-  end
-
     def image_from_base64(b64)
         uri = URI.parse(b64)
         if uri.scheme == "data" then
