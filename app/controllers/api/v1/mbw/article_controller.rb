@@ -9,10 +9,10 @@ class Api::V1::Mbw::ArticleController < Api::V1::Mbw::BaseController
       result:result
     })
   end
+
   def show
     article = @article.includes(:tags).find_by(:key => params[:id])
     result = article.create_article_hash_for_article_index if article.present?
-
     if result.present?
       render status: 200, json: JSON.pretty_generate({
         :status => 200,
