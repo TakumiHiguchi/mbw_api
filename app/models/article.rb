@@ -46,7 +46,7 @@ class Article < ApplicationRecord
     else
       articles = self.search(props)
     end
-    result = articles.map do |article|
+    result = articles.includes(:tags).map do |article|
       hash = {
         title:article.title,
         content:article.content,
@@ -72,8 +72,7 @@ class Article < ApplicationRecord
       end
       #タグ
       if props[:with_tag]
-        tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
-        tags = tag_datas.map do |d|
+        tags = article.tags.map do |d|
           next({
               key:d.key,
               name:d.name

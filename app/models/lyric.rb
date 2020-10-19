@@ -14,14 +14,6 @@ class Lyric < ApplicationRecord
   def self.search_create_hash(props)
     begin
       lyrics = self.search(props)
-      pagenation = {
-        current:  lyrics.current_page,
-        previous: lyrics.prev_page,
-        next:     lyrics.next_page,   
-        limit_value: lyrics.limit_value,
-        pages:    lyrics.total_pages,
-        count:    lyrics.total_count
-      }
       result = lyrics.map do |lyric|
         next({
           title:lyric.title,
@@ -35,8 +27,19 @@ class Lyric < ApplicationRecord
           iTunesUrl:lyric.iTunesUrl,
         })
       end
-    
     end
+    if props[:with_pagenation]
+      pagenation = {
+        current:  lyrics.current_page,
+        previous: lyrics.prev_page,
+        next:     lyrics.next_page,   
+        limit_value: lyrics.limit_value,
+        pages:    lyrics.total_pages,
+        count:    lyrics.total_count
+      }
       return result,pagenation
+    else
+      return result
+    end
   end
 end
