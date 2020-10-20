@@ -9,11 +9,6 @@ class Article < ApplicationRecord
   scope :index_only, -> { where(:isindex => true) }
   scope :latest, -> { order(:id => "DESC") }
 
-  def set_key
-    o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
-    self.key = (0...20).map { o[rand(o.length)] }.join
-  end
-
   def create_article_hash_for_article_index
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_index
