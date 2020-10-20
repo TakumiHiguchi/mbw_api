@@ -44,6 +44,7 @@ gem 'aws-sdk-s3'
 group :test do
   gem 'sqlite3', '~> 1.4'
   gem 'rspec-rails', '~> 3.6'
+  gem 'factory_bot_rails'
   gem 'faker'
 end
 
