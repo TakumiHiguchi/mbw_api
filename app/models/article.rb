@@ -24,6 +24,7 @@ class Article < ApplicationRecord
       title: self.title,
       content: self.content,
       key: self.key,
+      isindex: self.isindex,
       description: self.description,
       thumbnail: self.thumbnail.to_s,
       releaseTime: self.release_time,
@@ -46,7 +47,8 @@ class Article < ApplicationRecord
         title:article.title,
         content:article.content,
         description:article.description,
-        releaseTime:article.release_time
+        releaseTime:article.release_time,
+        isindex: article.isindex
       }
       #key
       case props[:search_type]
