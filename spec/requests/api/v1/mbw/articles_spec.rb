@@ -46,7 +46,7 @@ RSpec.describe "Api::V1::Mbw::Articles", type: :request do
     context '記事が公開されているとき' do
       before do
         @key = article_create.first.key
-        get api_v1_mbw_article_path(id: key)
+        get api_v1_mbw_article_path(id: @key)
         @body = JSON.parse(response.body)
       end
 
@@ -61,8 +61,8 @@ RSpec.describe "Api::V1::Mbw::Articles", type: :request do
 
     context '記事がnoindexのとき' do
       before do
-        key = no_index_article_create.first.key
-        get api_v1_mbw_article_path(id: key)
+        @key = no_index_article_create.first.key
+        get api_v1_mbw_article_path(id: @key)
         @body = JSON.parse(response.body)
       end
       it '正しい記事が取得できること' do
