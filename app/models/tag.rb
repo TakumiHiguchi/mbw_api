@@ -21,7 +21,7 @@ class Tag < ApplicationRecord
     end
   end
 
-  def create_hash_for_article_index
+  def create_hash_for_article_show
     hash = self.create_hash
     #1記事も存在しなかった場合return
     if self.articles.length == 0

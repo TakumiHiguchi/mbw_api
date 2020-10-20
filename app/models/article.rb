@@ -9,17 +9,8 @@ class Article < ApplicationRecord
   scope :index_only, -> { where(:isindex => true) }
   scope :latest, -> { order(:id => "DESC") }
 
-  def create_article_hash_for_article_index
-    tag_list = self.tags.map do |tag|
-      tag.create_hash_for_article_index
-    end
-    next_articles = Article.create_article_hash({
-      :query => tag_list[0][:name],
-      :limit => 10,
-      :with_thumbnail => true,
-      :with_tag => true
-    })
-
+  def article_default_hash
+    # 不要なパラメータをフロント側に送らないように設定
     return({
       title: self.title,
       content: self.content,
@@ -28,9 +19,21 @@ class Article < ApplicationRecord
       description: self.description,
       thumbnail: self.thumbnail.to_s,
       releaseTime: self.release_time,
-      next_articles: next_articles,
-      tags: tag_list
     })
+  end
+
+  def create_article_hash_for_article_show
+    tag_list = self.tags.map do |tag|
+      tag.create_hash_for_article_show
+    end
+    next_articles = Article.create_article_hash({
+      :query => tag_list[0][:name],
+      :limit => 10,
+      :with_thumbnail => true,
+      :with_tag => true
+    })
+
+    return self.article_default_hash.merge({ next_articles: next_articles }).merge({ tags: tag_list })
   end
 
   def self.create_article_hash(props)
