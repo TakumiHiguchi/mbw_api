@@ -1,12 +1,35 @@
 class Article < ApplicationRecord
+  #アソシエーション
   mount_uploader :thumbnail, ImageUploader
   has_many :article_tag_relations
   has_many :tags, through: :article_tag_relations
 
+  # スコープ
+  scope :publish_only, -> { where(:release_time => 0..Time.new.to_i) }
+  scope :index_only, -> { where(:isindex => true) }
+  scope :latest, -> { order(:id => "DESC") }
 
-  def set_key
-    o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
-    self.key = (0...20).map { o[rand(o.length)] }.join
+  def create_article_hash_for_article_index
+    tag_list = self.tags.map do |tag|
+      tag.create_hash_for_article_index
+    end
+    next_articles = Article.create_article_hash({
+      :query => tag_list[0][:name],
+      :limit => 10,
+      :with_thumbnail => true,
+      :with_tag => true
+    })
+
+    return({
+      title: self.title,
+      content: self.content,
+      key: self.key,
+      description: self.description,
+      thumbnail: self.thumbnail.to_s,
+      releaseTime: self.release_time,
+      next_articles: next_articles,
+      tags: tag_list
+    })
   end
 
   def self.create_article_hash(props)
@@ -18,15 +41,7 @@ class Article < ApplicationRecord
     else
       articles = self.search(props)
     end
-    pagenation = {
-      current:  articles.current_page,
-      previous: articles.prev_page,
-      next:     articles.next_page,   
-      limit_value: articles.limit_value,
-      pages:    articles.total_pages,
-      count:    articles.total_count
-    }
-    result = articles.map do |article|
+    result = articles.includes(:tags).map do |article|
       hash = {
         title:article.title,
         content:article.content,
@@ -52,8 +67,7 @@ class Article < ApplicationRecord
       end
       #タグ
       if props[:with_tag]
-        tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
-        tags = tag_datas.map do |d|
+        tags = article.tags.map do |d|
           next({
               key:d.key,
               name:d.name
@@ -64,7 +78,20 @@ class Article < ApplicationRecord
       
       next hash
     end
-    return result,pagenation
+
+    if props[:pagenation]
+      pagenation = {
+        current:  articles.current_page,
+        previous: articles.prev_page,
+        next:     articles.next_page,   
+        limit_value: articles.limit_value,
+        pages:    articles.total_pages,
+        count:    articles.total_count
+      }
+      return result,pagenation
+    else
+      return result
+    end
   end
 
   def self.search(props)
@@ -83,39 +110,6 @@ class Article < ApplicationRecord
     return self.where(
       ['UPPER(tags.name) LIKE ?', "%#{props[:query].upcase}%"]
     ).page(page).per(props[:limit])
-  end
-
-  def self.search_create_hash(props)
-    articles = self.search(props)
-    pagenation = {
-      current:  articles.current_page,
-      previous: articles.prev_page,
-      next:     articles.next_page,   
-      limit_value: articles.limit_value,
-      pages:    articles.total_pages,
-      count:    articles.total_count
-    }
-    result = articles.map do |article|
-      #タグを取得
-      tag_datas = Article.joins(:tags).select('articles.id,tags.*').where('articles.id = ?',article.id)
-      tags = tag_datas.map do |d|
-        next({
-            key:d.key,
-            name:d.name
-        })
-      end
-      next({
-        title:article.title,
-        content:article.content,
-        key:article.key,
-        description:article.description,
-        thumbnail:article.thumbnail.to_s,
-        releaseTime:article.release_time,
-        tags:tags
-      })
-    end
-
-    return result,pagenation
   end
 
     def image_from_base64(b64)

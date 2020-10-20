@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       end
       namespace 'mbw' do
         resources :search, only: [:index]
-        resources :tag, only: [:index,:show]
+        resources :tag, only: [:show]
         resources :article, only: [:index,:show]
       end
     end
