@@ -8,7 +8,7 @@ class Api::V1::Mbw::TagController < Api::V1::Mbw::BaseController
       tag_hash[:recomanded] = tag_hash[:articles]
       render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => tag_hash}] })
     else
-      render json: @@renderJson.createError(code:'AE_0101',api_version:'v1')
+      render status: 404, json: @@renderJson.createError(code:'AE_0101',api_version:'v1')
     end
   end
 end
