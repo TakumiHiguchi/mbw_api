@@ -77,7 +77,7 @@ if Rails.env.development?
   end
 end 
 
-# mubWebGUIadmin初期データの作成
+# mbwWebGUIadmin初期データの作成
 auth = Authentication.new()
 inf = auth.getAuthInf(age:3600)
 PlanRegister.create(
@@ -89,4 +89,11 @@ PlanRegister.create(
 )
 
 print "\nYuz: テストデータの作成が完了しました.\n\n"
+print "\nYuz: music.branchwithWEBGUI用のパスワード設定URLを表示します.\nYuz: music.branchwithWEBGUIを起動したのち、アクセスしてください。\n\n"
+if Rails.env.development?
+  puts PlanRegister.getUrl()
+else
+  puts PlanRegister.getUrl(url: "https://music-branchwith-web-gui.web.app/signup")
+end
+print "\n"
 
