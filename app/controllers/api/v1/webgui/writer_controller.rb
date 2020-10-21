@@ -10,30 +10,23 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
   end
 
   def signup
-        errorJson = RenderJson.new()
-        ins = PlanRegister.find_by(key:params[:key],session:params[:session],email:params[:email])
-        if ins
-            now = Time.now.to_i
-            if ins.maxage < now
-                render json: errorJson.createError(code:'AE_0003',api_version:'v1')
-            elsif !params[:phrase].match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
-                render json: errorJson.createError(code:'AE_0005',api_version:'v1')
-            else
-                pass = Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(params[:phrase] + 'music.branchwith'))
-                user = Writer.create(email:params[:email],password:pass)
-                ins.delete
-
-                #支払いのカラムを作る
-                Payment.create(writer_id:user.id)
-                render json: JSON.pretty_generate({
-                    status:'SUCCESS',
-                    api_version: 'v1'
-                })
-            end
-        else
-            render json: errorJson.createError(code:'AE_0003',api_version:'v1')
-        end
+    @auth = Authentication.new()
+    plan_register = PlanRegister.find_by(:key => params[:key], :session => params[:session], :email => params[:email])
+    if plan_register.maxage < Time.now.to_i
+      render json: errorJson.createError(code:'AE_0003',api_version:'v1')
+    elsif !params[:phrase].match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
+      render json: errorJson.createError(code:'AE_0005',api_version:'v1')
+    else plan_register.present?
+      writer = Writer.new(
+        :email => params[:email],
+        :password => @auth.get_SHA256_pass(phrase: params[:phrase])
+      )
+      writer.build_payment()
+      writer.save
+      plan_register.delete
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => []})
     end
+  end
 
     def home 
         auth = Authentication.new()

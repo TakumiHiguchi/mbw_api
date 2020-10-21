@@ -1,4 +1,8 @@
 class Authentication
+  def get_SHA256_pass(phrase: nil)
+    return Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(phrase + 'music.branchwith'))
+  end
+
   def isWriter?(props)
     user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
@@ -27,7 +31,7 @@ class Authentication
   end
 
   def signin(props)
-    pass = Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(props[:phrase] + 'music.branchwith'))
+    pass = get_SHA256_pass(phrase: props[:phrase])
     if props[:type] == "writer"
       user = Writer.find_by(email:props[:email],password:pass)
     end
