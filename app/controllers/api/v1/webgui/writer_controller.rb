@@ -1,21 +1,15 @@
-class Api::V1::Webgui::WriterController < ApplicationController
-    def signin
-        errorJson = RenderJson.new()
-        auth = Authentication.new()
-        result = auth.signin(type:"writer",email:params[:email],phrase:params[:phrase])
-        p result
-        if result[:isSignin]
-            render json: JSON.pretty_generate({
-            status:'SUCCESS',
-            api_version: 'v1',
-            session:result[:session],
-            maxAge:result[:maxAge]
-          })
-        else
-            render json: errorJson.createError(code:'AE_0006',api_version:'v1')
-        end
+class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
+  def signin
+    @auth = Authentication.new()
+    result = @auth.signin(:type => "writer", :email => params[:email], :phrase => params[:phrase])
+    if result[:isSignin]
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:session => result[:session]}, {:maxAge => result[:maxAge]}] })
+    else
+      render status: 404, json: @@renderJson.createError(code:'AE_0006',api_version:'v1')
     end
-    def signup
+  end
+
+  def signup
         errorJson = RenderJson.new()
         ins = PlanRegister.find_by(key:params[:key],session:params[:session],email:params[:email])
         if ins
