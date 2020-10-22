@@ -12,24 +12,20 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
   def signup
     @auth = Authentication.new()
     plan_register = PlanRegister.find_by(:key => params[:key], :session => params[:session], :email => params[:email])
-    if plan_register.maxage < Time.now.to_i
-      render json: errorJson.createError(code:'AE_0003',api_version:'v1')
-    elsif !params[:phrase].match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
-      render json: errorJson.createError(code:'AE_0005',api_version:'v1')
-    else plan_register.present?
-      writer = Writer.new(
-        :email => params[:email],
-        :password => @auth.get_SHA256_pass(phrase: params[:phrase])
-      )
+    if plan_register.plan_register_check_maxage && @auth.check_passphrase(phrase: params[:phrase])
+      writer = Writer.new(:email => params[:email], :password => @auth.get_SHA256_pass(phrase: params[:phrase]) )
       writer.build_payment()
-      writer.save
-      plan_register.delete
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => []})
+      if writer.save
+        plan_register.delete
+        render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => []})
+      else
+        render status: 400, json: errorJson.createError(code:'AE_0003',api_version:'v1')
+      end
     end
   end
 
-    def home 
-        auth = Authentication.new()
+  def home 
+    @auth = Authentication.new()
         errorJson = RenderJson.new()
         result = auth.isWriter?(email:params[:email],session:params[:session])
 

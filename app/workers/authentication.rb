@@ -3,20 +3,13 @@ class Authentication
     return Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(phrase + 'music.branchwith'))
   end
 
+  def check_passphrase(phrase: nil)
+    return phrase.match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
+  end
+
   def isWriter?(props)
-    user = Writer.find_by(email:props[:email],session:props[:session])
-    now = Time.now.to_i
-    if user && user.maxage > now
-      return({
-        isWriter:true,
-        writer:user
-      })
-    else
-      return({
-        isWriter:false,
-        writer:user
-      })
-    end
+    @user = Writer.find_by(email:props[:email],session:props[:session])
+    return @user && @user.maxage > Time.now.to_i
   end
 
   def isAdmin?(props)
