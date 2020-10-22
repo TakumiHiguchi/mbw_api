@@ -8,8 +8,8 @@ class Authentication
   end
 
   def isWriter?(props)
-    @user = Writer.find_by(email:props[:email],session:props[:session])
-    return @user && @user.maxage > Time.now.to_i
+    user = Writer.find_by(email:props[:email],session:props[:session])
+    return user && user.maxage > Time.now.to_i
   end
 
   def isAdmin?(props)
