@@ -35,4 +35,26 @@ RSpec.describe "Api::V1::Webgui::Writers", type: :request do
       end
     end
   end
+
+  describe 'Post /api/v1/webgui/home' do
+    context 'サインインしている時' do
+      it 'apiが200レスポンスを返すこと' do        
+        get api_v1_webgui_writer_home_path(
+          :email => create_writer.email,
+          :session => create_writer.session,
+        )
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'サインインしていない時' do
+      it 'apiが401レスポンスを返すこと' do
+        get api_v1_webgui_writer_home_path(
+          :email => "dummy@dummy.com",
+          :session => Digest::SHA256.hexdigest("悪さしてやるぜ〜〜"),
+        )
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
 end

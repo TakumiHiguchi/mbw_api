@@ -33,7 +33,7 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
         {:draft => draft}, {:unaccepted => unaccepted}, {:resubmit => resubmit}, {:completeMonth => complete}, {:complete => complete}, {:payment => @user.payment}
       ]})
     else
-      render json: @@renderJson.createError(code:'AE_0002',api_version:'v1')
+      render status: 401, json: @@renderJson.createError(code:'AE_0002',api_version:'v1')
     end
   end
 end
