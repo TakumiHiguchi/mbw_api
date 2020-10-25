@@ -1,6 +1,6 @@
 class Authentication
   def get_SHA256_pass(phrase: nil)
-    return Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(phrase + 'music.branchwith'))
+    return Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(phrase.to_s + 'music.branchwith'))
   end
 
   def check_passphrase(phrase: nil)
