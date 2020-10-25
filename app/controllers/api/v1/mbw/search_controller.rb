@@ -4,7 +4,7 @@ class Api::V1::Mbw::SearchController < Api::V1::Mbw::BaseController
   def index
     case params[:model]
     when 'lyric'
-      result,pagenation = Lyric.joins(:favs).select("lyrics.*, favs.*").search_create_hash(query: params[:q], limit:params[:limit], page: params[:page])
+      result,pagenation = Lyric.joins(:favs).select("lyrics.*, favs.*").search_create_hash(query: params[:q], limit:params[:limit], page: params[:page], with_pagenation: true)
     when 'article'
       result,pagenation = @article.latest.create_article_hash({
         :limit => params[:limit],
@@ -15,11 +15,6 @@ class Api::V1::Mbw::SearchController < Api::V1::Mbw::BaseController
         :with_tag => true
       })
     end
-    render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1',
-        result:result,
-        pagenation:pagenation
-    })
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}, {:pagenation => pagenation}] })
   end
 end

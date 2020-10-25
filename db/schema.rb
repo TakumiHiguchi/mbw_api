@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_13_012151) do
+ActiveRecord::Schema.define(version: 2020_10_25_054956) do
 
   create_table "article_requests", force: :cascade do |t|
     t.string "key"
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(version: 2020_09_13_012151) do
     t.integer "maxage"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "admin", default: false
   end
 
 end

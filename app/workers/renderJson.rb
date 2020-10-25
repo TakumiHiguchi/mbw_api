@@ -1,4 +1,13 @@
 class RenderJson
+  def createSuccess(props)
+    hash = {
+      :status => 200,
+      :api_version => props[:api_version]
+    }
+    props[:result].each{ |ins| hash.merge!(ins) }
+    return JSON.pretty_generate(hash)
+  end
+
   def createError(props)
     props[:status] ||= 400
     hash = {

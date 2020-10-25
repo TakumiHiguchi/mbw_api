@@ -1,25 +1,22 @@
 class Authentication
+  def get_SHA256_pass(phrase: nil)
+    return Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(phrase.to_s + 'music.branchwith'))
+  end
+
+  def check_passphrase(phrase: nil)
+    return phrase.match(/\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])\w{6,12}\z/)
+  end
+
   def isWriter?(props)
     user = Writer.find_by(email:props[:email],session:props[:session])
-    now = Time.now.to_i
-    if user && user.maxage > now
-      return({
-        isWriter:true,
-        writer:user
-      })
-    else
-      return({
-        isWriter:false,
-        writer:user
-      })
-    end
+    return user && user.maxage > Time.now.to_i
   end
 
   def isAdmin?(props)
     #sessionの確認
     user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
-    if props[:email] == "uiljpfs4fg5hsxzrnhknpdqfx@gmail.com" && !user.nil? && user.maxage > now
+    if user.present? && user.maxage > now && user.admin
       return true
     else
       return false
@@ -27,7 +24,7 @@ class Authentication
   end
 
   def signin(props)
-    pass = Digest::SHA256.hexdigest(Digest::SHA256.hexdigest(props[:phrase] + 'music.branchwith'))
+    pass = get_SHA256_pass(phrase: props[:phrase])
     if props[:type] == "writer"
       user = Writer.find_by(email:props[:email],password:pass)
     end
@@ -35,7 +32,7 @@ class Authentication
       session = Digest::SHA256.hexdigest(rand(1000000000).to_s + user.email + Time.now.to_i.to_s)
       maxAge = Time.now.to_i + 3600
       user.update(session:session,maxage:maxAge)
-      return {isSignin:true,session:session,maxAge:maxAge}
+      return {isSignin:true, session:session, maxAge:maxAge, admin:user.admin}
     else
       return {isSignin:false}
     end

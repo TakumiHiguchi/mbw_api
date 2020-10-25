@@ -1,5 +1,7 @@
 class Api::V1::Mbw::BaseController < ApplicationController
+  @@renderJson = RenderJson.new
+
   def set_articles
-    @article = Article.publish_only.index_only
+    @article = Article.publish_only
   end
 end
