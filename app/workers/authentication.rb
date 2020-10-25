@@ -16,7 +16,7 @@ class Authentication
     #sessionの確認
     user = Writer.find_by(email:props[:email],session:props[:session])
     now = Time.now.to_i
-    if props[:email] == "uiljpfs4fg5hsxzrnhknpdqfx@gmail.com" && !user.nil? && user.maxage > now
+    if user.present? && user.maxage > now && user.admin
       return true
     else
       return false
@@ -32,7 +32,7 @@ class Authentication
       session = Digest::SHA256.hexdigest(rand(1000000000).to_s + user.email + Time.now.to_i.to_s)
       maxAge = Time.now.to_i + 3600
       user.update(session:session,maxage:maxAge)
-      return {isSignin:true,session:session,maxAge:maxAge}
+      return {isSignin:true, session:session, maxAge:maxAge, admin:user.admin}
     else
       return {isSignin:false}
     end

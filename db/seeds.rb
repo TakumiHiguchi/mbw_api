@@ -88,6 +88,12 @@ PlanRegister.create(
   name:"ひいらぎ"
 )
 
+Writer.create(
+  :email => "admin@test.com",
+  :password => auth.get_SHA256_pass(phrase: "Administrator1"),
+  :admin => true
+)
+
 print "\nYuz: テストデータの作成が完了しました.\n\n"
 print "\nYuz: music.branchwithWEBGUI用のパスワード設定URLを表示します.\nYuz: music.branchwithWEBGUIを起動したのち、アクセスしてください。\n\n"
 if Rails.env.development?
