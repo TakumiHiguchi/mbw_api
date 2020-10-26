@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       namespace 'webgui' do
         namespace 'admin' do
           resources :article, only: [:index,:show,:create,:edit,:update]
+          resources :plan_register, only: [:index,:create] 
         end
         post '/writer/signup' => 'writer#signup'
         post '/writer/signin' => 'writer#signin'
@@ -16,7 +17,7 @@ Rails.application.routes.draw do
 
         resources :search, only: [:index] 
         resources :lyrics, only: [:show] 
-        resources :plan_register, only: [:index,:show,:create] 
+        resources :plan_register, only: [:show] 
         resources :article_request, only: [:index,:show,:create,:edit] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
         resources :article, only: [:index,:show,:create,:edit,:update]

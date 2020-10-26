@@ -11,11 +11,17 @@ class PlanRegister < ApplicationRecord
   end
 
   def create_default_hash
+    Rails.env.development? ? uri = "http://localhost:3000" : uri = Thread.current[:request].protocol + Thread.current[:request].host
     return({
       :name => self.name,
       :email => self.email,
       :maxAge => self.maxage,
-      :url => Thread.current[:request].protocol + Thread.current[:request].host + "/signup?k="+self.key+"&s="+self.session
+      :url => uri + "/signup?k="+self.key+"&s="+self.session
     })
   end
+
+  def host_with_port
+    "#{host}#{port_string}"
+  end
+
 end
