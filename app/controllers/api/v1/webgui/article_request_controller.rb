@@ -1,29 +1,13 @@
-class Api::V1::Webgui::ArticleRequestController < ApplicationController
-    def can
-        auth = Authentication.new()
-        errorJson = RenderJson.new()
-        result = auth.isWriter?(email:params[:email],session:params[:session])
-
-        if result[:isWriter]
-            ins = ArticleRequest.where(status:0)
-            res = ins.map do |data|
-                next({
-                    title:data.title,
-                    type:data.request_type,
-                    count:data.count,
-                    status:data.status,
-                    key:data.key
-                })
-            end
-            render json: JSON.pretty_generate({
-                status:'SUCCESS',
-                api_version: 'v1',
-                result:res
-            })
-        else
-            render json: errorJson.createError(code:'AE_0002',api_version:'v1')
-        end
+class Api::V1::Webgui::ArticleRequestController < Api::V1::Webgui::BaseController
+  before_action :setWritter, :only => [:can, :index, :create]
+  def can
+    if @auth.isWriter?(email:params[:email],session:params[:session])
+      result = ArticleRequest.where(:status => 0).map{ |data| data.create_default_hash }
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+    else
+      render status: 401, json: @@renderJson.createError(code:'AE_0002',api_version:'v1')
     end
+  end
 
     def index
         auth = Authentication.new()

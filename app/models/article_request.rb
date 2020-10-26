@@ -6,11 +6,12 @@ class ArticleRequest < ApplicationRecord
   def create_default_hash
     return({
       :title => self.title,
-      :type => self.tipe,
+      :type => self.request_type,
       :count => self.count,
       :status => self.status,
       :key => self.key,
-      :maxAge => self.maxage
+      :maxAge => self.maxage,
+      :submissionTime => self.submission_time
     })
   end
   def self.create_hash_for_home
