@@ -62,6 +62,23 @@ def development_seed(create_count)
     lyric.save
     base_worker.view_remaining_percentage({ label: "Yuz: Lyrics", count: count+1, max: create_count[:tag] })
   end
+
+  # mbwWebGUIadmin初期データの作成
+  auth = Authentication.new()
+  inf = auth.getAuthInf(age:3600)
+  PlanRegister.create(
+    email:"test@test.com",
+    key:inf[:key],
+    maxage:inf[:maxAge],
+    session:inf[:session],
+    name:"ひいらぎ"
+  )
+
+  Writer.create(
+    :email => "admin@test.com",
+    :password => auth.get_SHA256_pass(phrase: "Administrator1"),
+    :admin => true
+  )
 end
 
 print "\n- music.branchwithのテストデータを作成します.\n\n"
@@ -76,23 +93,6 @@ if Rails.env.development?
     development_seed(create_count)
   end
 end 
-
-# mbwWebGUIadmin初期データの作成
-auth = Authentication.new()
-inf = auth.getAuthInf(age:3600)
-PlanRegister.create(
-  email:"test@test.com",
-  key:inf[:key],
-  maxage:inf[:maxAge],
-  session:inf[:session],
-  name:"ひいらぎ"
-)
-
-Writer.create(
-  :email => "admin@test.com",
-  :password => auth.get_SHA256_pass(phrase: "Administrator1"),
-  :admin => true
-)
 
 print "\nYuz: テストデータの作成が完了しました.\n\n"
 print "\nYuz: music.branchwithWEBGUI用のパスワード設定URLを表示します.\nYuz: music.branchwithWEBGUIを起動したのち、アクセスしてください。\n\n"

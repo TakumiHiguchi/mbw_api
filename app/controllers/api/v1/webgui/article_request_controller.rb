@@ -18,26 +18,16 @@ class Api::V1::Webgui::ArticleRequestController < Api::V1::Webgui::BaseControlle
     end
   end
 
-    def create
-        auth = Authentication.new()
-        errorJson = RenderJson.new()
-        if auth.isAdmin?(email:params[:email],session:params[:session]) then
-            o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
-            key =(0...20).map { o[rand(o.length)] }.join
-            result = ArticleRequest.create(title:params[:title],request_type:params[:type],count:params[:count],key:key)
-            if result
-                render json: JSON.pretty_generate({
-                    status:'SUCCESS',
-                    api_version: 'v1',
-                })
-            else
-                render json: errorJson.createError(code:'AE_0004',api_version:'v1')
-            end
-        else
-            render json: errorJson.createError(code:'AE_0001',api_version:'v1')
-        end
+  def create
+    if @auth.isAdmin?(email:params[:email],session:params[:session]) then
+      ArticleRequest.create(article_request_create_params)
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
+    else
+      render status: 401, json: @@renderJson.createError(code:'AE_0001',api_version:'v1')
     end
-    def edit
+  end
+
+  def edit
         auth = Authentication.new()
         errorJson = RenderJson.new()
         if auth.isAdmin?(email:params[:email],session:params[:session]) then
@@ -87,4 +77,12 @@ class Api::V1::Webgui::ArticleRequestController < Api::V1::Webgui::BaseControlle
             render json: errorJson.createError(code:'AE_0001',api_version:'v1')
         end
     end
+  def article_request_create_params
+    return({
+      :title => params[:title],
+      :request_type => params[:type],
+      :count => params[:count], 
+      :key => @@base_worker.get_key
+    })
+  end
 end

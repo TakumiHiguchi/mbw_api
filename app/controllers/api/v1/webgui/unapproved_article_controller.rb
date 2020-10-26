@@ -1,4 +1,5 @@
-class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
+class Api::V1::Webgui::UnapprovedArticleController < Api::V1::Webgui::BaseController
+  before_action :setWritter, :only => [:index, :create]
     def index
         auth = Authentication.new()
         errorJson = RenderJson.new()
@@ -24,37 +25,17 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
             render json: errorJson.createError(code:'AE_0002',api_version:'v1')
         end
     end
-    def create
-        auth = Authentication.new()
-        errorJson = RenderJson.new()
-        result = auth.isWriter?(email:params[:email],session:params[:session])
-        if result[:isWriter]
-            aR = ArticleRequest.find_by(key:params[:key],status:0)
-            if aR
-                now = Time.now.to_i
-                #執筆中にする
-                aR.update(status:1,maxage:now+86400)
-                #ユーザーと関連付ける
-                WriterArticleRequestRelation.create(writer_id:result[:writer].id,article_request_id:aR.id)
-                #記事を作成する
-                UnapprovedArticle.create(
-                    article_request_id:aR.id,
-                    title:aR.title,
-                    content:"",
-                    key:params[:key],
-                    description:"",
-                )
-                render json: JSON.pretty_generate({
-                    status:'SUCCESS',
-                    api_version: 'v1',
-                })
-            else
-                render json: errorJson.createError(code:'AE_0007',api_version:'v1')
-            end
-        else
-            render json: errorJson.createError(code:'AE_0002',api_version:'v1')
-        end
+  def create
+    @article_request = ArticleRequest.find_by(:key => params[:key], :status => 0)
+    if @article_request.present?
+      @user.assign_article_request(@article_request)
+      @article_request.unapproved_articles.build(unapproved_articles_create_params)
+      article_request.save
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
+    else
+      render json: @@renderJson.createError(code:'AE_0007',api_version:'v1')
     end
+  end
     def edit
         auth = Authentication.new()
         errorJson = RenderJson.new()
@@ -119,4 +100,14 @@ class Api::V1::Webgui::UnapprovedArticleController < ApplicationController
             render json: errorJson.createError(code:'AE_0002',api_version:'v1')
         end
     end
+  private
+  def unapproved_articles_create_params
+    return({
+      :article_request_id => @article_request.id,
+      :title => @article_request.title,
+      :content => "",
+      :key => params[:key],
+      :description => "",
+    })
+  end
 end
