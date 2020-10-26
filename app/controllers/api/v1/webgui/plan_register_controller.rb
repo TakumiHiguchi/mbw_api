@@ -1,27 +1,14 @@
-class Api::V1::Webgui::PlanRegisterController < ApplicationController
-  Root = 'http://localhost:3000'
+class Api::V1::Webgui::PlanRegisterController < Api::V1::Webgui::BaseController
+  before_action :setAdminUser, :only => [:index]
+  before_action :set_request
+
   def index
-    auth = Authentication.new()
-    errorJson = RenderJson.new()
-    
-    if auth.isAdmin?(email:params[:email],session:params[:session]) then
-      now = Time.now.to_i
-      ins = PlanRegister.where(maxage: now..Float::INFINITY)
-      result = ins.map do |data|
-        next({
-            name:data.name,
-            email:data.email,
-            maxAge:data.maxage,
-            url:Root + "/signup?k="+data.key+"&s="+data.session
-        })
-      end
-      render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1',
-        result:result
-      })
+    if @auth.isAdmin?(email:params[:email],session:params[:session]) then
+      pr = PlanRegister.where(maxage: Time.now.to_i..Float::INFINITY)
+      result = pr.map{ |data| data.create_default_hash }
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{ :result => result }] })
     else
-      render json: errorJson.createError(code:'AE_0001',api_version:'v1')
+      render status: 401, json: @@renderJson.createError(code:'AE_0001',api_version:'v1')
     end
   end
 
@@ -69,5 +56,9 @@ class Api::V1::Webgui::PlanRegisterController < ApplicationController
     else
       render json: errorJson.createError(code:'AE_0001',api_version:'v1')
     end
+  end
+
+  def set_request
+    Thread.current[:request] = request
   end
 end

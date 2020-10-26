@@ -13,14 +13,8 @@ class Authentication
   end
 
   def isAdmin?(props)
-    #sessionの確認
-    user = Writer.find_by(email:props[:email],session:props[:session])
-    now = Time.now.to_i
-    if user.present? && user.maxage > now && user.admin
-      return true
-    else
-      return false
-    end
+    user = Writer.find_by(email:props[:email],session:props[:session], admin: true)
+    return user.present? && user.maxage > Time.now.to_i
   end
 
   def signin(props)
