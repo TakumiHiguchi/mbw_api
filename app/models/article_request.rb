@@ -21,4 +21,15 @@ class ArticleRequest < ApplicationRecord
     complete = self.where(status:4).map{ |data| data.create_default_hash }
     return draft, unaccepted, resubmit, complete
   end
+
+  def submission(isSubmission)
+    if isSubmission
+      self.update(
+        :status => 2,
+        :submission_time => Time.now.to_i
+      )
+    else
+      self.update(:status => 1)
+    end
+  end
 end
