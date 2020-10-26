@@ -1,30 +1,10 @@
 class Api::V1::Webgui::UnapprovedArticleController < Api::V1::Webgui::BaseController
   before_action :setWritter, :only => [:index, :create]
-    def index
-        auth = Authentication.new()
-        errorJson = RenderJson.new()
-        result = auth.isWriter?(email:params[:email],session:params[:session])
-        if result[:isWriter]
-            ins = Writer.joins(:article_requests).select("writers.*, article_requests.*").where("writers.id = ?", result[:writer].id).order("article_requests.status ASC")
-            res = ins.map do |data|
-                next({
-                    title:data.title,
-                    type:data.request_type,
-                    count:data.count,
-                    status:data.status,
-                    key:data.key,
-                    maxAge:data.maxage
-                })
-            end
-            render json: JSON.pretty_generate({
-                status:'SUCCESS',
-                api_version: 'v1',
-                result:res
-            })
-        else
-            render json: errorJson.createError(code:'AE_0002',api_version:'v1')
-        end
-    end
+  def index
+    result = @user.article_requests.map{ |data| data.create_default_hash }
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+  end
+
   def create
     @article_request = ArticleRequest.find_by(:key => params[:key], :status => 0)
     if @article_request.present?
