@@ -1,30 +1,18 @@
 class Api::V1::Webgui::ArticleRequestController < Api::V1::Webgui::BaseController
   before_action :setWritter, :only => [:can, :index, :create]
   def can
-    if @auth.isWriter?(email:params[:email],session:params[:session])
-      result = ArticleRequest.where(:status => 0).map{ |data| data.create_default_hash }
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
-    else
-      render status: 401, json: @@renderJson.createError(code:'AE_0002',api_version:'v1')
-    end
+    result = ArticleRequest.where(:status => 0).map{ |data| data.create_default_hash }
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
   def index
-    if @auth.isAdmin?(email:params[:email],session:params[:session]) then
-      result = ArticleRequest.all.map{ |data| data.create_default_hash }
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
-    else
-      render status: 401, json: @@renderJson.createError(code:'AE_0001',api_version:'v1')
-    end
+    result = ArticleRequest.all.map{ |data| data.create_default_hash }
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
   def create
-    if @auth.isAdmin?(email:params[:email],session:params[:session]) then
-      ArticleRequest.create(article_request_create_params)
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
-    else
-      render status: 401, json: @@renderJson.createError(code:'AE_0001',api_version:'v1')
-    end
+    ArticleRequest.create(article_request_create_params)
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
   end
 
   def edit
