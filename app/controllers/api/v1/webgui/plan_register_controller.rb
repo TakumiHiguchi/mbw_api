@@ -4,7 +4,7 @@ class Api::V1::Webgui::PlanRegisterController < Api::V1::Webgui::BaseController
 
   def index
     if @auth.isAdmin?(email:params[:email],session:params[:session]) then
-      pr = PlanRegister.where(maxage: Time.now.to_i..Float::INFINITY)
+      pr = PlanRegister.within_deadline
       result = pr.map{ |data| data.create_default_hash }
       render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{ :result => result }] })
     else
@@ -13,23 +13,11 @@ class Api::V1::Webgui::PlanRegisterController < Api::V1::Webgui::BaseController
   end
 
   def show
-    errorJson = RenderJson.new()
-    user = PlanRegister.find_by(key:params[:id],session:params[:session])
+    user = PlanRegister.within_deadline.find_by(key:params[:id],session:params[:session])
     if user
-      now = Time.now.to_i
-      if user.maxage > now
-        ins = [name:user.name,email:user.email]
-        
-        render json: JSON.pretty_generate({
-          status:'SUCCESS',
-          api_version: 'v1',
-          result:ins
-        })
-      else
-        render json: errorJson.createError(code:'AE_0001',api_version:'v1')
-      end
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{ :result => [name:user.name,email:user.email] }] })
     else
-      render json: errorJson.createError(code:'AE_0014',api_version:'v1')
+      render status: 401, json: @@renderJson.createError(code:'AE_0014',api_version:'v1')
     end
   end
 
