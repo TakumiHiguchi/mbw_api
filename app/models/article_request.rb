@@ -32,4 +32,15 @@ class ArticleRequest < ApplicationRecord
       self.update(:status => 1)
     end
   end
+
+  def resubmit
+    if self.status == 2
+      self.update(
+          status:3,
+          maxage:Time.now.to_i + 86400
+      )
+    else
+      return false
+    end
+  end
 end
