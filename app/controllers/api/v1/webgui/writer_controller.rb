@@ -28,7 +28,7 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
   def home 
     draft, unaccepted, resubmit, complete = @user.article_requests.create_hash_for_home
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [
-      {:draft => draft}, {:unaccepted => unaccepted}, {:resubmit => resubmit}, {:completeMonth => complete}, {:complete => complete}, {:payment => @user.payment}
+      {:draft => draft}, {:unaccepted => unaccepted}, {:resubmit => resubmit}, {:completeMonth => complete}, {:complete => complete}, {:payment => @user.payment.create_default_hash}
     ]})
   end
 end
