@@ -16,7 +16,6 @@ Rails.application.routes.draw do
         get '/article_request/can' => 'article_request#can'
 
         resources :search, only: [:index] 
-
         resources :plan_register, only: [:show] 
         resources :article_request, only: [:index,:show,:create] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
@@ -29,6 +28,7 @@ Rails.application.routes.draw do
         resources :search, only: [:index]
         resources :tag, only: [:show]
         resources :article, only: [:index,:show]
+        resources :lyrics, only: [:show] 
       end
     end
   end

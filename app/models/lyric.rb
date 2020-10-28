@@ -11,11 +11,12 @@ class Lyric < ApplicationRecord
   end
 
   def create_default_hash
+    self.jucket.to_s == "" ? jucket = nil : jucket = self.jucket.to_s
     return({
       title:self.title,
       artist:self.artist,
       key:self.key,
-      jucket:self.jucket.to_s,
+      jucket:jucket,
       lyricist:self.lyricist,
       composer:self.composer,
       lyrics:self.lyrics,
