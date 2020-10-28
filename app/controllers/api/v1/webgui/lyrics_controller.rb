@@ -1,21 +1,7 @@
 class Api::V1::Webgui::LyricsController < ApplicationController
-    def show
-        lyrics = Lyric.find_by(key:params[:id])
-        result = {
-            title:lyrics.title,
-            artist:lyrics.artist,
-            key:lyrics.key,
-            jucket:lyrics.jucket.to_s,
-            lyricist:lyrics.lyricist,
-            composer:lyrics.composer,
-            lyrics:lyrics.lyrics,
-            amazonUrl:lyrics.amazonUrl,
-            iTunesUrl:lyrics.iTunesUrl,
-        }
-        render json: JSON.pretty_generate({
-            status:'SUCCESS',
-            api_version: 'v1',
-            result:result
-        })
-    end
+  before_action :setWritter, :only => [:show]
+  def show
+    result = Lyric.find_by(key:params[:id]).create_default_hash
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+  end
 end
