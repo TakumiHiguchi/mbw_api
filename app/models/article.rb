@@ -68,7 +68,7 @@ class Article < ApplicationRecord
           presigned_url = Article.new.s3_presigner(path: "uploads/article/thumbnail/#{article.articles_thumbnail.to_s}")
           hash[:thumbnail] = presigned_url
         else
-          hash[:thumbnail] = article.thumbnail.to_s
+          article.thumbnail.to_s == "" ? hash[:thumbnail] = nil : hash[:thumbnail] = article.thumbnail.to_s
         end
       end
       #タグ
