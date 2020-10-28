@@ -74,11 +74,19 @@ def development_seed(create_count)
     name:"ひいらぎ"
   )
 
-  Writer.create(
+  admin_user = Writer.new(
     :email => "admin@test.com",
     :password => auth.get_SHA256_pass(phrase: "Administrator1"),
     :admin => true
   )
+
+  admin_user.build_payment(
+    :unsettled => 200000,
+    :confirm => 999,
+    :paid => 1000,
+  )
+
+  admin_user.save
 end
 
 print "\n- music.branchwithのテストデータを作成します.\n\n"

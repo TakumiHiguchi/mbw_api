@@ -15,12 +15,11 @@ class Api::V1::Webgui::ArticleController < Api::V1::Webgui::BaseController
       # タグを作る
       params[:tags].each{|tag_name| article.tags.createTag(article.id,tag_name) }
       # 支払いを更新する 
-      user.payment.update(unsettled:ins.unsettled + 500)
+      user.payment.update(unsettled: user.payment.unsettled + 500)
       # 完成済みにする
       user.article_requests.find_by(key: params[:key]).update(status:4)
       # ライターが保存する記事データベースから消す
-      ua = UnapprovedArticle.find_by(article_request_id:uaArticle.id)
-      ua.delete
+      user.article_requests.find_by(key: params[:key]).unapproved_articles.delete_all
       render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
     else
       render status: 400, json: @@renderJson.createError(code:'AE_0001',api_version:'v1')
