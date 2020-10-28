@@ -1,11 +1,8 @@
-class Api::V1::Webgui::ArticleController < ApplicationController
+class Api::V1::Webgui::ArticleController < Api::V1::Webgui::BaseController
+  before_action :setWritter
   def index
     result = @article.latest.create_article_hash({ :limit => params[:limit], :query => nil, :with_thumbnail => true, :with_tag => true })
-    render status: 200, json: JSON.pretty_generate({
-      status: 200,
-      api_version: 'v1',
-      result:result
-    })
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
   def create
     auth = Authentication.new()

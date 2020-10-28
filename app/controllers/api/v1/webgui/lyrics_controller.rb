@@ -1,4 +1,4 @@
-class Api::V1::Webgui::LyricsController < ApplicationController
+class Api::V1::Webgui::LyricsController < Api::V1::Webgui::BaseController
   before_action :setWritter, :only => [:show]
   def show
     result = Lyric.find_by(key:params[:id]).create_default_hash
