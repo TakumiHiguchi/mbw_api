@@ -26,8 +26,9 @@ class Article < ApplicationRecord
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_show
     end
+    tag_list.length > 0 ? query = tag_list[0][:name] : query = self.title
     next_articles = Article.create_article_hash({
-      :query => tag_list[0][:name],
+      :query => query,
       :limit => 10,
       :with_thumbnail => true,
       :with_tag => true
