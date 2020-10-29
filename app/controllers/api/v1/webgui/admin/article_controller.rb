@@ -9,25 +9,16 @@ class Api::V1::Webgui::Admin::ArticleController < Api::V1::Webgui::Admin::BaseCo
   end
 
   def edit
-    data = Article.find_by(key: params[:id])
-    tag_list = data.tags.map do |tag|
-      tag.create_hash_for_article_page(key: params[:id])
+    article = Article.find_by(key: params[:id])
+    if article.present?
+      tag_list = article.tags.map do |tag|
+        tag.create_hash_for_article_page(key: params[:id])
+      end
+      result = article.article_default_hash.merge({:tags => tag_list})
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+    else
+      render status: 400, json: @@renderJson.createError({ :status => 400, :code => 'AE_0011', :api_version => 'v1'})
     end
-    result = {
-      title: article.title,
-      content: article.content,
-      key: article.key,
-      description: article.description,
-      thumbnail: article.thumbnail.to_s,
-      releaseTime: article.release_time,
-      next_articles: next_articles,
-      tags: tag_list
-    }
-    render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1',
-        result:result
-    })
   end
 
   private
