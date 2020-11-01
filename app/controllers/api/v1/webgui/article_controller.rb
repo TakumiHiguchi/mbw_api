@@ -1,5 +1,5 @@
 class Api::V1::Webgui::ArticleController < Api::V1::Webgui::BaseController
-  before_action :setWritter, :only => [:create]
+  before_action :setAdminUser, :only => [:create]
   before_action :set_articles, :only => [:index]
   def index
     result = @article.latest.create_article_hash({ :limit => params[:limit], :query => nil, :with_thumbnail => true, :with_tag => true })
@@ -13,7 +13,7 @@ class Api::V1::Webgui::ArticleController < Api::V1::Webgui::BaseController
       article = Article.create(create_article_params)
       article.image_from_base64(params[:thumbnail])
       # タグを作る
-      params[:tags].each{|tag_name| article.tags.createTag(article.id,tag_name) }
+      article.tags.createTag(article.id, params[:tags])
       # 支払いを更新する 
       user.payment.update(unsettled: user.payment.unsettled + 500)
       # 完成済みにする

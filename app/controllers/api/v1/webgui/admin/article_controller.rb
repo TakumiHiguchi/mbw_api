@@ -4,7 +4,7 @@ class Api::V1::Webgui::Admin::ArticleController < Api::V1::Webgui::Admin::BaseCo
     #普通に記事を作成するメソッド
     article = Article.create(create_article_params)
     article.image_from_base64(params[:thumbnail])
-    params[:tags].each{|tag_name| article.tags.createTag(article.id,tag_name) }
+    article.tags.createTag(article.id, params[:tags])
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
   end
 

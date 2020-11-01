@@ -119,6 +119,7 @@ class Article < ApplicationRecord
   end
 
   def image_from_base64(b64)
+    return if b64.nil?
     uri = URI.parse(b64)
     if uri.scheme == "data" then
         data = decode(uri)
