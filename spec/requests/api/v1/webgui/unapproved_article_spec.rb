@@ -115,5 +115,64 @@ RSpec.describe "Api::V1::Webgui::UnapprovedArticles", type: :request do
     end
   end
 
+  describe 'PUT /api/v1/webgui/unapproved_article/:id' do
+    let(:sign_in){ Authentication.new.signin(:type => "writer", :email => create_writer_with_unapproved_article.email, :phrase => "test") }
+    context 'サインインしている時' do
+      context 'パラメータのarticle_requestが存在する時' do
+        before do
+          @article_request = create_writer_with_unapproved_article.article_requests.first
+          @params = {
+            :id => @article_request.key, 
+            :session => sign_in[:session], 
+            :email => create_writer_with_unapproved_article.email,
+            :content => "test",
+            :isSubmission => true
+          }
+        end
+        it 'apiが200レスポンスを返すこと' do
+          put api_v1_webgui_unapproved_article_path( @params )
+          expect(response).to have_http_status(200)
+        end
+
+        it 'unapproved_articleのcontentが変わっていること' do
+          put api_v1_webgui_unapproved_article_path( @params )
+          expect(@article_request.unapproved_articles.first.content).to eq("test")
+        end
+
+        context 'isSubmissionがtrueの時' do
+          it 'article_requestが完成済みになる（statusが2になる）こと' do
+            put api_v1_webgui_unapproved_article_path( @params )
+            expect(ArticleRequest.first.status).to eq(2)
+          end
+        end
+
+        context 'isSubmissionがfalseの時' do
+          it 'article_requestが下書きになる（statusが1になる）こと' do
+            @params[:isSubmission] = false
+            put api_v1_webgui_unapproved_article_path( @params )
+            expect(ArticleRequest.first.status).to eq(1)
+          end
+        end
+        
+      end
+      context 'パラメータのarticle_requestが存在しない時' do
+        it 'apiが400レスポンスを返すこと' do
+          put api_v1_webgui_unapproved_article_path(
+            :id => "test", 
+            :session => sign_in[:session], 
+            :email => create_writer_with_unapproved_article.email
+          )
+          expect(response).to have_http_status(400)
+        end
+      end
+    end
+
+    context 'サインインしてない時' do
+      it 'apiが401レスポンスを返すこと' do
+        put api_v1_webgui_unapproved_article_path(:id => "test", :session => "", :email => "")
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
 
 end

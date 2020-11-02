@@ -1,4 +1,6 @@
 class ArticleRequest < ApplicationRecord
+  require 'extension/string'
+
   has_many :unapproved_articles
   has_many :writer_article_request_relations
   has_many :writers, through: :writer_article_request_relations
@@ -23,7 +25,7 @@ class ArticleRequest < ApplicationRecord
   end
 
   def submission(isSubmission)
-    if isSubmission
+    if isSubmission.to_bool
       self.update(
         :status => 2,
         :submission_time => Time.now.to_i

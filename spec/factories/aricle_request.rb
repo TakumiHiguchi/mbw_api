@@ -3,7 +3,7 @@ FactoryBot.define do
     key { BaseWorker.new.get_key }
     content { Faker::Lorem.paragraph(sentence_count: 200) }
     title { Faker::Lorem.sentence }
-    status { 1 }
+    status { 3 }
 
     trait :with_unapproved_article do
       after(:create) do |article_request|
