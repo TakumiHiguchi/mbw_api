@@ -1,42 +1,24 @@
 class Api::V1::Webgui::Admin::ArticleController < Api::V1::Webgui::Admin::BaseController
+  before_action :setAdminUser, :only => [:create, :edit]
   def create
     #普通に記事を作成するメソッド
-    auth = Authentication.new()
-    errorJson = RenderJson.new()
-    if auth.isAdmin?(email:params[:email],session:params[:session]) then
-      article = Article.create(create_article_params)
-      article.image_from_base64(params[:thumbnail])
-      params[:tags].each do |tag|
-        article.tags.createTag(article.id,tag_name)
-      end
-      render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1'
-      })
-    else
-      render json: errorJson.createError(code:'AE_0001',api_version:'v1')
-    end
+    article = Article.create(create_article_params)
+    article.image_from_base64(params[:thumbnail])
+    article.tags.createTag(article.id, params[:tags])
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
   end
+
   def edit
-    data = Article.find_by(key: params[:id])
-    tag_list = data.tags.map do |tag|
-      tag.create_hash_for_article_page(key: params[:id])
+    article = Article.find_by(key: params[:id])
+    if article.present?
+      tag_list = article.tags.map do |tag|
+        tag.create_hash_for_article_page(key: params[:id])
+      end
+      result = article.article_default_hash.merge({:tags => tag_list})
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+    else
+      render status: 400, json: @@renderJson.createError({ :status => 400, :code => 'AE_0011', :api_version => 'v1'})
     end
-    result = {
-      title: article.title,
-      content: article.content,
-      key: article.key,
-      description: article.description,
-      thumbnail: article.thumbnail.to_s,
-      releaseTime: article.release_time,
-      next_articles: next_articles,
-      tags: tag_list
-    }
-    render json: JSON.pretty_generate({
-        status:'SUCCESS',
-        api_version: 'v1',
-        result:result
-    })
   end
 
   private
@@ -46,7 +28,7 @@ class Api::V1::Webgui::Admin::ArticleController < Api::V1::Webgui::Admin::BaseCo
       content:params[:content],
       description:params[:description],
       release_time:params[:releaseTime],
-      key: @base_worker.get_key
+      key: @@base_worker.get_key
     })
   end
 end

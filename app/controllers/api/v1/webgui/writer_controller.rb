@@ -26,14 +26,9 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
   end
 
   def home 
-    @auth = Authentication.new()
-    if @auth.isWriter?(email:params[:email],session:params[:session])
-      draft, unaccepted, resubmit, complete = @user.article_requests.create_hash_for_home
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [
-        {:draft => draft}, {:unaccepted => unaccepted}, {:resubmit => resubmit}, {:completeMonth => complete}, {:complete => complete}, {:payment => @user.payment}
-      ]})
-    else
-      render status: 401, json: @@renderJson.createError(code:'AE_0002',api_version:'v1')
-    end
+    draft, unaccepted, resubmit, complete = @user.article_requests.create_hash_for_home
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [
+      {:draft => draft}, {:unaccepted => unaccepted}, {:resubmit => resubmit}, {:completeMonth => complete}, {:complete => complete}, {:payment => @user.payment.create_default_hash}
+    ]})
   end
 end

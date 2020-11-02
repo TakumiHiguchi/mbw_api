@@ -11,13 +11,14 @@ class Article < ApplicationRecord
 
   def article_default_hash
     # 不要なパラメータをフロント側に送らないように設定
+    thumbnail = self.thumbnail.to_s == "" ? nil : self.thumbnail.to_s
     return({
       title: self.title,
       content: self.content,
       key: self.key,
       isindex: self.isindex,
       description: self.description,
-      thumbnail: self.thumbnail.to_s,
+      thumbnail: thumbnail,
       releaseTime: self.release_time,
     })
   end
@@ -26,12 +27,8 @@ class Article < ApplicationRecord
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_show
     end
-    next_articles = Article.create_article_hash({
-      :query => tag_list[0][:name],
-      :limit => 10,
-      :with_thumbnail => true,
-      :with_tag => true
-    })
+    query = tag_list.length > 0 ? tag_list[0][:name] : self.title
+    next_articles = ArticleSuggestion.new.get_article_suggestions(:query => query)
 
     return self.article_default_hash.merge({ next_articles: next_articles }).merge({ tags: tag_list })
   end
@@ -67,7 +64,7 @@ class Article < ApplicationRecord
           presigned_url = Article.new.s3_presigner(path: "uploads/article/thumbnail/#{article.articles_thumbnail.to_s}")
           hash[:thumbnail] = presigned_url
         else
-          hash[:thumbnail] = article.thumbnail.to_s
+          article.thumbnail.to_s == "" ? hash[:thumbnail] = nil : hash[:thumbnail] = article.thumbnail.to_s
         end
       end
       #タグ
@@ -117,41 +114,42 @@ class Article < ApplicationRecord
     ).page(page).per(props[:limit])
   end
 
-    def image_from_base64(b64)
-        uri = URI.parse(b64)
-        if uri.scheme == "data" then
-            data = decode(uri)
-            extension = extension(uri)
-            file = decode64_tempfile(data,extension)
-            self.update(thumbnail:file)
-        end
+  def image_from_base64(b64)
+    return if b64.nil?
+    uri = URI.parse(b64)
+    if uri.scheme == "data" then
+        data = decode(uri)
+        extension = extension(uri)
+        file = decode64_tempfile(data,extension)
+        self.update(thumbnail:file)
     end
-    def decode(uri)
-        opaque = uri.opaque
-        data = opaque[opaque.index(",") + 1, opaque.size]
-        Base64.decode64(data)
-    end
-    
-    def extension(uri)
-        opaque = uri.opaque
-        mime_type = opaque[0, opaque.index(";")]
-        p opaque
-        case mime_type
-        when "image/png" then
-          ".png"
-        when "image/jpeg" then
-          ".jpg"
-        when "image/jpg" then
-          ".jpg"
-        else
-          raise "Unsupport Content-Type"
-        end
-    end
-    def decode64_tempfile(f,extension)
-        file = Tempfile.new(['test', extension])
-        file.binmode
-        file << f
-        file.rewind
-        return file
-    end
+  end
+  def decode(uri)
+      opaque = uri.opaque
+      data = opaque[opaque.index(",") + 1, opaque.size]
+      Base64.decode64(data)
+  end
+
+  def extension(uri)
+      opaque = uri.opaque
+      mime_type = opaque[0, opaque.index(";")]
+      p opaque
+      case mime_type
+      when "image/png" then
+        ".png"
+      when "image/jpeg" then
+        ".jpg"
+      when "image/jpg" then
+        ".jpg"
+      else
+        raise "Unsupport Content-Type"
+      end
+  end
+  def decode64_tempfile(f,extension)
+      file = Tempfile.new(['test', extension])
+      file.binmode
+      file << f
+      file.rewind
+      return file
+  end
 end

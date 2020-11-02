@@ -24,7 +24,7 @@ music.branchwith群のapiです。頑張ってリファクタリングしてい�
 
 4. テストデータを流します
   ```
-  $ docker-compose run web bundle exec db:seed
+  $ docker-compose run web bundle exec rails db:seed
   ```
 
 ## テストデータ
