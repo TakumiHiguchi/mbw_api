@@ -5,11 +5,11 @@ class ArticleSuggestion
 
   def get_including_characters_article(props)
     return Article.limit(props[:count]) unless props[:query]
-    result = Article.order("RANDOM()").where(
+    result = Article.where(
       ['UPPER(title) LIKE ?', "%#{props[:query].upcase}%"]
     ).or(Article.where(
       ['UPPER(content) LIKE ?', "%#{props[:query].upcase}%"]
-    )).limit(props[:count])
+    )).order("RANDOM()").limit(props[:count])
     return result + Article.order("RANDOM()").limit(props[:count] - result.count)
   end
 
