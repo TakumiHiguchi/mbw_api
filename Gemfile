@@ -34,7 +34,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'rack-cors'
 
 #ページネーション
-gem 'kaminari'
+gem 'kaminari' 
+
 
 # for image uploader with AWS S3
 gem 'carrierwave'
