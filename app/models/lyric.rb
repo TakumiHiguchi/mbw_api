@@ -27,7 +27,7 @@ class Lyric < ApplicationRecord
 
   def self.search_create_hash(props)
     lyrics = self.search(props)
-    result = lyrics.map{|lyric| lyric.create_default_hash }
+    result = lyrics.map{|lyric| lyric.create_default_hash.merge({:favs => lyric.favs.first.fav}) }
     if props[:with_pagenation]
       pagenation = {
         current:  lyrics.current_page,
