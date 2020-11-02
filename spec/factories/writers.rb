@@ -13,5 +13,11 @@ FactoryBot.define do
         create(:writer_article_request_relation, writer: writer, article_request: create(:article_request))
       end
     end
+    trait :with_article_request_and_unapproved_article do
+      after(:create) do |writer|
+        create(:writer_article_request_relation, writer: writer, article_request: create(:article_request, :with_unapproved_article))
+      end
+    end
+    
   end
 end
