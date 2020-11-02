@@ -13,7 +13,7 @@ class Api::V1::Webgui::UnapprovedArticleController < Api::V1::Webgui::BaseContro
       @article_request.save
       render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
     else
-      render status: 400, json: @@renderJson.createError(code:'AE_0007',api_version:'v1')
+      render status: 400, json: @@renderJson.createError(code:'AE_0007', api_version:'v1')
     end
   end
 
