@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_25_054956) do
+ActiveRecord::Schema.define(version: 2020_11_03_051215) do
 
   create_table "article_requests", force: :cascade do |t|
     t.string "key"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(version: 2020_10_25_054956) do
   create_table "favs", force: :cascade do |t|
     t.integer "lyric_id"
     t.integer "fav"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "instagrams", force: :cascade do |t|
+    t.string "title"
+    t.string "url"
+    t.string "instagram_url"
+    t.text "content"
+    t.string "artist"
+    t.string "thumbnail"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
