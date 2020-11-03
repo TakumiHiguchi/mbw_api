@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   db:
     image: postgres
@@ -6,7 +6,10 @@ services:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: 'postgres'
+    networks:
+      - mbw_api-network
   web:
+    container_name: mbw-api
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3020 -b '0.0.0.0'"
     volumes:
@@ -15,3 +18,14 @@ services:
       - "3020:3020"
     depends_on:
       - db
+    environment:
+      - ROOT_URL=http://mbw-api.localhost
+      - VIRTUAL_HOST=mbw-api.localhost
+    networks:
+      - mbw_proxy-network
+      - mbw_api-network
+networks:
+  mbw_proxy-network:
+    name: mbw_proxy-network
+  mbw_api-network:
+    name: mbw_api-network
