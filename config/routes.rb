@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         resources :tag, only: [:show]
         resources :article, only: [:index,:show]
         resources :lyrics, only: [:show] 
+        resources :instagram, only: [:index] 
       end
     end
   end
