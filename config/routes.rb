@@ -9,6 +9,7 @@ Rails.application.routes.draw do
           resources :article, only: [:index,:show,:create,:edit,:update]
           resources :plan_register, only: [:index,:create]
           resources :article_request, only: [:edit] 
+          resources :instagram, only: [:create] 
         end
         post '/writer/signup' => 'writer#signup'
         post '/writer/signin' => 'writer#signin'
@@ -29,7 +30,7 @@ Rails.application.routes.draw do
         resources :tag, only: [:show]
         resources :article, only: [:index,:show]
         resources :lyrics, only: [:show] 
-        resources :instagram, only: [:index] 
+        resources :instagram, only: [:index, :show] 
       end
     end
   end
