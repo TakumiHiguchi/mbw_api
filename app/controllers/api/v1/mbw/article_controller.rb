@@ -33,24 +33,24 @@ class Api::V1::Mbw::ArticleController < Api::V1::Mbw::BaseController
   end
 
   def search_article_type(res)
-    article = @article.includes(:tags).where(
-      ['UPPER(title) LIKE ?', "%#{res["title"].upcase}%"]
-    ).where(
-      ['UPPER(title) LIKE ?', "%#{res["artist"].upcase}%"]
-    ).limit(1)
+    article = @article.where(
+      ['title LIKE ?', "%#{res["title"]}%"]
+    ).find_by(
+      ['title LIKE ?', "%#{res["artist"]}%"]
+    )
     if article.present?
-      redirect_to '/api/v1/wbw/article/' + article.key, status: 301
+      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key}] })
     else
       render status: 404, json: @@renderJson.createError({ :status => 404, :code => 'AE_0011', :api_version => 'v1'})
     end
   end
 
   def search_feature_type(res)
-    article = @article.includes(:tags).where(
-      ['UPPER(title) LIKE ?', "%#{res["title"].upcase}%"]
+    article = @article.find_by(
+      ['title LIKE ?', "%#{res["title"]}%"]
     ).limit(1)
     if article.present?
-      redirect_to '/api/v1/wbw/article/' + article.key, status: 301
+      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key}] })
     else
       render status: 404, json: @@renderJson.createError({ :status => 404, :code => 'AE_0011', :api_version => 'v1'})
     end
