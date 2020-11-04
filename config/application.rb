@@ -26,7 +26,7 @@ module MbwApi
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'https://music-branchwith-web-gui.web.app','https://musicgift-54fd9.web.app', 'http://localhost:3000', 'http://localhost:3001'
+        origins 'https://music-branchwith-web-gui.web.app','https://musicgift-54fd9.web.app', 'http://mbw-webgui.localhost', 'http://localhost:3001'
         resource "*",
           headers: :any,
           methods: [:get, :post, :options, :head, :patch]

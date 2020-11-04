@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_051215) do
 
   create_table "instagrams", force: :cascade do |t|
     t.string "title"
+    t.string "key"
     t.string "url"
     t.string "instagram_url"
     t.text "content"
