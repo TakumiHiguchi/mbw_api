@@ -31,6 +31,9 @@ Rails.application.routes.draw do
         resources :article, only: [:index,:show]
         resources :lyrics, only: [:show] 
         resources :instagram, only: [:index, :show] 
+
+        # 旧式サイトから301リダイレクトするためのルーティング。後々消す
+        get 'our_article' => 'ord_url_redirect#article'
       end
     end
   end
