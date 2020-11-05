@@ -1,4 +1,4 @@
-class Api::V1::Mbw::InstagramController < Api::V1::Mbw::BaseController
+class Api::V1::Webgui::Admin::InstagramController < Api::V1::Webgui::Admin::BaseController
   before_action :setAdminUser, :only => [:create]
   def create
     Instagram.create(create_params)

@@ -12,7 +12,7 @@ FactoryBot.define do
 
     trait :with_favs do
       after(:create) do |lyrics|
-        lyrics.favs << create(:fav)
+        create(:fav, lyric: lyrics)
       end
     end
   end

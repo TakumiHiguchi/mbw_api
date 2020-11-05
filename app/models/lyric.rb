@@ -1,11 +1,11 @@
 class Lyric < ApplicationRecord
   mount_uploader :jucket, ImageUploader
-  has_many :favs
+  has_one :fav
   def self.search(props)
     page = props[:page]
     page ||= 1
-    return self.page(page).per(props[:limit]) unless props[:query]
-    result = self.where(['UPPER(artist) LIKE ? OR UPPER(title) LIKE ?', "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]).page(page).per(props[:limit]).order('favs.fav')
+    return self.includes(:fav).order('favs.fav DESC').page(page).per(props[:limit]) unless props[:query]
+    result = self.includes(:fav).where(['UPPER(artist) LIKE ? OR UPPER(title) LIKE ?', "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]).order('favs.fav DESC').page(page).per(props[:limit])
               
     return result
   end
@@ -27,7 +27,9 @@ class Lyric < ApplicationRecord
 
   def self.search_create_hash(props)
     lyrics = self.search(props)
-    result = lyrics.map{|lyric| lyric.create_default_hash.merge({:favs => lyric.favs.first.fav}) }
+    result = lyrics.includes(:fav).map do |lyric| 
+      lyric.create_default_hash.merge({:favs => lyric.fav.fav}) if lyric.fav.present?
+    end.compact
     if props[:with_pagenation]
       pagenation = {
         current:  lyrics.current_page,

@@ -4,7 +4,7 @@ class Api::V1::Mbw::SearchController < Api::V1::Mbw::BaseController
   def index
     case params[:model]
     when 'lyric'
-      result,pagenation = Lyric.includes(:favs).search_create_hash(query: params[:q], limit:params[:limit], page: params[:page], with_pagenation: true)
+      result,pagenation = Lyric.search_create_hash(query: params[:q], limit:params[:limit], page: params[:page], with_pagenation: true)
     when 'article'
       result,pagenation = @article.latest.create_article_hash({
         :limit => params[:limit],
