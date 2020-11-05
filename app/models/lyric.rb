@@ -5,7 +5,7 @@ class Lyric < ApplicationRecord
     page = props[:page]
     page ||= 1
     return self.page(page).per(props[:limit]) unless props[:query]
-    result = self.where(['UPPER(artist) LIKE ? OR UPPER(title) LIKE ?', "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]).page(page).per(props[:limit])
+    result = self.where(['UPPER(artist) LIKE ? OR UPPER(title) LIKE ?', "%#{props[:query].upcase}%", "%#{props[:query].upcase}%"]).page(page).per(props[:limit]).order('favs.fav')
               
     return result
   end
