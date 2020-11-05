@@ -12,8 +12,10 @@ class Api::V1::Mbw::OrdUrlRedirectController < Api::V1::Mbw::BaseController
     response_article = @@base_worker.hit_mbw({ url: "/api/article", params: { key: params[:key] } })
     if response_article.code.to_i == 200
       res = JSON.parse(response_article.body)
-      if res["type"] = 'article'
+      if res["type"] == "article"
         search_article_type(res)
+      elsif res["type"] == "lyrics"
+        search_lyrics_type(res)
       else
         search_feature_type(res)
       end
@@ -34,7 +36,7 @@ class Api::V1::Mbw::OrdUrlRedirectController < Api::V1::Mbw::BaseController
       else
         article = article.first
       end
-      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key}] })
+      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key, :type => "article"}] })
     else
       render status: 404, json: @@renderJson.createError({ :status => 404, :code => 'AE_0011', :api_version => 'v1'})
     end
@@ -54,9 +56,22 @@ class Api::V1::Mbw::OrdUrlRedirectController < Api::V1::Mbw::BaseController
   def search_feature_type(res)
     article = @article.find_by(
       ["REPLACE(REPLACE(title,' ',''),'　','') LIKE ?", "%#{res["title"].gsub(" ", "")}%"]
-    ).limit(1)
+    )
     if article.present?
-      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key}] })
+      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key, :type => "article"}] })
+    else
+      render status: 404, json: @@renderJson.createError({ :status => 404, :code => 'AE_0011', :api_version => 'v1'})
+    end
+  end
+
+  def search_lyrics_type(res)
+    article = Lyric.where(
+      ["REPLACE(REPLACE(title,' ',''),'　','') LIKE ?", "%#{res["title"].gsub(" ", "")}%"]
+    ).find_by(
+      ["REPLACE(REPLACE(artist,' ',''),'　','') LIKE ?", "%#{res["artist"].gsub(" ", "")}%"]
+    )
+    if article.present?
+      render status: 301, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:key => article.key, :type => "lyrics"}] })
     else
       render status: 404, json: @@renderJson.createError({ :status => 404, :code => 'AE_0011', :api_version => 'v1'})
     end
