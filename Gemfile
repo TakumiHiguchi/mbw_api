@@ -36,6 +36,8 @@ gem 'rack-cors'
 #ページネーション
 gem 'kaminari' 
 
+# サイトマップ
+gem 'sitemap_generator'
 
 # for image uploader with AWS S3
 gem 'carrierwave'

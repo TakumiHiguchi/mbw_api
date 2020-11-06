@@ -1,4 +1,6 @@
 class Article < ApplicationRecord
+  require 'extension/string'
+
   #アソシエーション
   mount_uploader :thumbnail, ImageUploader
   has_many :article_tag_relations
@@ -9,12 +11,12 @@ class Article < ApplicationRecord
   scope :index_only, -> { where(:isindex => true) }
   scope :latest, -> { order(:id => "DESC") }
 
-  def article_default_hash
+  def article_default_hash(google_ad: { :is_include=> true, :target => 'h3' })
     # 不要なパラメータをフロント側に送らないように設定
     thumbnail = self.thumbnail.to_s == "" ? nil : self.thumbnail.to_s
     return({
       title: self.title,
-      content: self.content,
+      content: self.content.include_google_ad(is_include: google_ad[:is_include], target: google_ad[:target]),
       key: self.key,
       isindex: self.isindex,
       description: self.description,
