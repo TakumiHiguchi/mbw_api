@@ -27,7 +27,7 @@ class Article < ApplicationRecord
 
   def create_article_hash_for_article_show
     target = "h3"
-    target = "h2" if self.content.scan(/<h2.*?>/).size > self.content.scan(/<h3.*?>/).size
+    target = "h2" if self.content.scan(/<h2.*?>/).size > self.content.scan(/<h3.*?>/).size + 2
 
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_show
