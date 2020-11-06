@@ -10,7 +10,7 @@ class BaseWorker
   end
 
   def hit_mbw(props)
-    uri = URI.parse("https://music.branchwith.com" + props[:url])
+    uri = URI.parse("https://musicbranchwith.herokuapp.com/" + props[:url])
     uri.query = URI.encode_www_form(props[:params]) if props[:params]
     https = https_setting(uri)
     https.start do
