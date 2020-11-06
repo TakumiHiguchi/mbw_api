@@ -26,13 +26,16 @@ class Article < ApplicationRecord
   end
 
   def create_article_hash_for_article_show
+    target = "h3"
+    target = "h2" if self.content.scan(/<h2.*?>/).size > self.content.scan(/<h3.*?>/).size
+
     tag_list = self.tags.map do |tag|
       tag.create_hash_for_article_show
     end
     query = tag_list.length > 0 ? tag_list[0][:name] : self.title
     next_articles = ArticleSuggestion.new.get_article_suggestions(:query => query)
 
-    return self.article_default_hash.merge({ next_articles: next_articles }).merge({ tags: tag_list })
+    return self.article_default_hash(google_ad: { :is_include=> true, :target => target }).merge({ next_articles: next_articles }).merge({ tags: tag_list })
   end
 
   def self.create_article_hash(props)
