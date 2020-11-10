@@ -9,7 +9,7 @@ class Article < ApplicationRecord
   # スコープ
   scope :publish_only, -> { where(:release_time => 0..Time.new.to_i) }
   scope :index_only, -> { where(:isindex => true) }
-  scope :latest, -> { order(:id => "DESC") }
+  scope :latest, -> { order(:release_time => "DESC") }
 
   def article_default_hash(google_ad: { :is_include=> true, :target => 'h3' })
     # 不要なパラメータをフロント側に送らないように設定
