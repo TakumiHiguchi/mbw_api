@@ -2,7 +2,7 @@ class Api::V1::Editor::ArticleRequestController < Api::V1::Editor::BaseControlle
   before_action :setEditorUser, :only => [:index, :edit, :resubmit]
 
   def index
-    result = ArticleRequest.all.map{ |data| data.create_default_hash }
+    result = ArticleRequest.where(:status => 1).or(where(:status => 2)).or(where(:status => 3)).map{ |data| data.create_default_hash }
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
