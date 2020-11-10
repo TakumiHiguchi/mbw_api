@@ -1,18 +1,13 @@
-class Api::V1::Webgui::Admin::ArticleRequestController < Api::V1::Webgui::Admin::BaseController
-  before_action :setAdminUser, :only => [:index, :create, :edit, :resubmit]
+class Api::V1::Editor::ArticleRequestController < Api::V1::Editor::BaseController
+  before_action :setEditorUser, :only => [:index, :edit, :resubmit]
 
   def index
     result = ArticleRequest.all.map{ |data| data.create_default_hash }
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
-  def create
-    ArticleRequest.create(article_request_create_params)
-    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })
-  end
-
   def edit
-    article_request = ArticleRequest.find_by(:key => params[:id])
+    article_request = ArticleRequest.article_requests.find_by(:key => params[:id])
     unapproved_article = article_request.unapproved_articles.first
     if unapproved_article.present?
       result = article_request.create_default_hash.merge({

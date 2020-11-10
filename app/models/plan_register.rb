@@ -2,7 +2,7 @@ class PlanRegister < ApplicationRecord
 
   scope :within_deadline, -> { where(:maxage => Time.now.to_i..Float::INFINITY) }
 
-  def self.getUrl(email: "test@test.com", url:"http://localhost:3000/signup")
+  def self.getUrl(email: "test@test.com", url:"http://mbw-webgui.localhost/signup")
     pR = self.find_by(email: email)
     return url + "?k=" + pR.key.to_s + "&s=" + pR.session.to_s
   end

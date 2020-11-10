@@ -8,8 +8,12 @@ Rails.application.routes.draw do
 
           resources :article, only: [:index,:show,:create,:edit,:update]
           resources :plan_register, only: [:index,:create]
-          resources :article_request, only: [:index,:edit] 
-          resources :instagram, only: [:create] 
+          resources :article_request, only: [:index, :edit, :create]
+          resources :instagram, only: [:create]
+        end
+        namespace 'editor' do
+          post '/article_request/resubmit' => 'article_request#resubmit'
+          resources :article_request, only: [:index,:edit]
         end
         post '/writer/signup' => 'writer#signup'
         post '/writer/signin' => 'writer#signin'
@@ -18,7 +22,6 @@ Rails.application.routes.draw do
 
         resources :search, only: [:index] 
         resources :plan_register, only: [:show] 
-        resources :article_request, only: [:show,:create] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
         resources :article, only: [:index,:show,:create,:edit,:update]
       end

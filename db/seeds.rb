@@ -56,7 +56,7 @@ def development_seed(create_count)
       :amazonUrl => nil,
       :iTunesUrl => nil
     )
-    lyric.favs.build(
+    lyric.build_fav(
       :fav => rand(10000)
     )
     lyric.save
