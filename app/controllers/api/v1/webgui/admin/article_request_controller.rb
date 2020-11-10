@@ -1,5 +1,10 @@
 class Api::V1::Webgui::Admin::ArticleRequestController < Api::V1::Webgui::BaseController
-  before_action :setAdminUser, :only => [:edit, :resubmit]
+  before_action :setAdminUser, :only => [:index, :edit, :resubmit]
+
+  def index
+    result = ArticleRequest.all.map{ |data| data.create_default_hash }
+    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
+  end
 
   def edit
     article_request = @user.article_requests.find_by(:key => params[:id])

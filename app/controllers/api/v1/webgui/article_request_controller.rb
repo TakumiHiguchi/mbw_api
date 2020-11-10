@@ -5,11 +5,6 @@ class Api::V1::Webgui::ArticleRequestController < Api::V1::Webgui::BaseControlle
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
-  def index
-    result = ArticleRequest.all.map{ |data| data.create_default_hash }
-    render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
-  end
-
   def create
     ArticleRequest.create(article_request_create_params)
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [] })

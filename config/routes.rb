@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
           resources :article, only: [:index,:show,:create,:edit,:update]
           resources :plan_register, only: [:index,:create]
-          resources :article_request, only: [:edit] 
+          resources :article_request, only: [:index,:edit] 
           resources :instagram, only: [:create] 
         end
         post '/writer/signup' => 'writer#signup'
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
         resources :search, only: [:index] 
         resources :plan_register, only: [:show] 
-        resources :article_request, only: [:index,:show,:create] 
+        resources :article_request, only: [:show,:create] 
         resources :unapproved_article, only: [:index,:create,:edit,:update] 
         resources :article, only: [:index,:show,:create,:edit,:update]
       end
