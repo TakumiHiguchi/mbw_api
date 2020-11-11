@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         namespace 'editor' do
           post '/article_request/resubmit' => 'article_request#resubmit'
           resources :article_request, only: [:index,:edit]
+          resources :article, only: [:create]
         end
         post '/writer/signup' => 'writer#signup'
         post '/writer/signin' => 'writer#signin'

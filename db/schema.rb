@@ -132,6 +132,7 @@ ActiveRecord::Schema.define(version: 2020_11_03_051215) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "admin", default: false
     t.boolean "editor", default: false
+    t.string "name", default: ""
   end
 
 end

@@ -1,4 +1,4 @@
-class Api::V1::Webgui::Admin::BaseController < ApplicationController
+class Api::V1::Webgui::Editor::BaseController < ApplicationController
   @@base_worker = BaseWorker.new()
   @@renderJson = RenderJson.new()
 

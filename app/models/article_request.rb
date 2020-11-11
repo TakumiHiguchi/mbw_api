@@ -4,6 +4,8 @@ class ArticleRequest < ApplicationRecord
   has_many :writer_article_request_relations
   has_many :writers, through: :writer_article_request_relations
 
+  scope :editor_scope, -> { where(:status => 1).or(where(:status => 2)).or(where(:status => 3)) }
+
   def create_default_hash
     return({
       :title => self.title,

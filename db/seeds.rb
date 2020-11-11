@@ -77,7 +77,8 @@ def development_seed(create_count)
   admin_user = Writer.new(
     :email => "admin@test.com",
     :password => auth.get_SHA256_pass(phrase: "Administrator1"),
-    :admin => true
+    :admin => true,
+    :editor => true
   )
 
   admin_user.build_payment(

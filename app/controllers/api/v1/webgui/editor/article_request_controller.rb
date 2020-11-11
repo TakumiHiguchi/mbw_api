@@ -1,13 +1,13 @@
-class Api::V1::Editor::ArticleRequestController < Api::V1::Editor::BaseController
+class Api::V1::Webgui::Editor::ArticleRequestController < Api::V1::Webgui::Editor::BaseController
   before_action :setEditorUser, :only => [:index, :edit, :resubmit]
 
   def index
-    result = ArticleRequest.where(:status => 1).or(where(:status => 2)).or(where(:status => 3)).map{ |data| data.create_default_hash }
+    result = ArticleRequest.editor_scope.map{ |data| data.create_default_hash.merge({:user_name => data.writers.first.name}) }
     render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:result => result}] })
   end
 
   def edit
-    article_request = ArticleRequest.article_requests.find_by(:key => params[:id])
+    article_request = ArticleRequest.find_by(:key => params[:id])
     unapproved_article = article_request.unapproved_articles.first
     if unapproved_article.present?
       result = article_request.create_default_hash.merge({

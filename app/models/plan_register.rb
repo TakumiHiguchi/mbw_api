@@ -11,7 +11,7 @@ class PlanRegister < ApplicationRecord
   end
 
   def create_default_hash
-    Rails.env.development? ? uri = "http://localhost:3000" : uri = Thread.current[:request].protocol + Thread.current[:request].host
+    Rails.env.development? ? uri = "http://mbw-webgui.localhost" : uri = Thread.current[:request].protocol + Thread.current[:request].host
     return({
       :name => self.name,
       :email => self.email,

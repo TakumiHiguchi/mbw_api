@@ -4,7 +4,7 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
     @auth = Authentication.new()
     result = @auth.signin(:type => "writer", :email => params[:email], :phrase => params[:phrase])
     if result[:isSignin]
-      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:session => result[:session]}, {:maxAge => result[:maxAge]}, {:admin => result[:admin]}] })
+      render status: 200, json: @@renderJson.createSuccess({ :api_version => 'v1', :result => [{:session => result[:session]}, {:maxAge => result[:maxAge]}, {:admin => result[:admin]},{:editor => result[:editor]}] })
     else
       render status: 404, json: @@renderJson.createError(code:'AE_0006',api_version:'v1')
     end
@@ -14,7 +14,7 @@ class Api::V1::Webgui::WriterController < Api::V1::Webgui::BaseController
     @auth = Authentication.new()
     plan_register = PlanRegister.find_by(:key => params[:key], :session => params[:session], :email => params[:email])
     if plan_register.plan_register_check_maxage && @auth.check_passphrase(phrase: params[:phrase])
-      writer = Writer.new(:email => params[:email], :password => @auth.get_SHA256_pass(phrase: params[:phrase]) )
+      writer = Writer.new(:email => params[:email], :password => @auth.get_SHA256_pass(phrase: params[:phrase]), :name => plan_register.name)
       writer.build_payment()
       if writer.save
         plan_register.delete
