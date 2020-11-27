@@ -10,7 +10,7 @@ class Api::V1::Webgui::Editor::ArticleController < Api::V1::Webgui::Editor::Base
       # タグを作る
       article.tags.createTag(article.id, params[:tags])
       # 支払いを更新する 
-      user.payment.update(unsettled: user.payment.unsettled + 500)
+      user.payment.update(unsettled: user.payment.unsettled + 600)
       # 完成済みにする
       user.article_requests.find_by(key: params[:key]).update(status:4)
       # ライターが保存する記事データベースから消す
